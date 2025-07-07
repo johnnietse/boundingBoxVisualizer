@@ -1,0 +1,97 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Dataset Visualizer</title>
+    <style>
+        * { box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { background-color: #f5f5f5; padding: 20px; border-radius: 8px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        .tabs { display: flex; margin-bottom: 15px; }
+        .tab { padding: 10px 15px; cursor: pointer; border: 1px solid #ddd; }
+        .tab.active { background-color: #4CAF50; color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>YOLO Dataset Visualizer</h1>
+
+        <form action="/process" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="class_names">Class Names (one per line):</label>
+                <textarea id="class_names" name="class_names" rows="5" placeholder="person&#10;car&#10;bicycle"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="classes_file">Or upload classes.txt:</label>
+                <input type="file" id="classes_file" name="classes_file" accept=".txt">
+            </div>
+
+            <div class="form-group">
+                <label for="max_size">Max Image Size:</label>
+                <input type="number" id="max_size" name="max_size" value="1000">
+            </div>
+
+            <div class="form-group">
+                <label for="conf_threshold">Confidence Threshold:</label>
+                <input type="number" step="0.01" id="conf_threshold" name="conf_threshold" value="0.25">
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" data-tab="single">Single Image</div>
+                <div class="tab" data-tab="batch">Batch Processing</div>
+            </div>
+
+            <div id="single-tab" class="tab-content active">
+                <div class="form-group">
+                    <label for="image">Image File:</label>
+                    <input type="file" id="image" name="image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="label">Label File (optional):</label>
+                    <input type="file" id="label" name="label" accept=".txt">
+                </div>
+            </div>
+
+            <div id="batch-tab" class="tab-content">
+                <div class="form-group">
+                    <label for="zip_file">Dataset ZIP File:</label>
+                    <input type="file" id="zip_file" name="zip_file" accept=".zip">
+                    <small>Should contain images and .txt labels with same filenames</small>
+                </div>
+            </div>
+
+            <button type="submit">Visualize Dataset</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Remove active classes
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tabContents.forEach(tc => tc.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    tab.classList.add('active');
+                    const tabName = tab.getAttribute('data-tab');
+                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
