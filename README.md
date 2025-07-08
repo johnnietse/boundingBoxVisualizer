@@ -81,8 +81,8 @@ The application is ready for deployment on platforms like Render or Heroku. The 
 ### Render Deployment
 - Create a new Web Service on Render
 - Connect your GitHub repository
-- Set build command: pip install --upgrade pip setuptools wheel && pip install -r requirements.txt
-- Set start command: gunicorn app:app
+- Set build command: `pip install --upgrade pip setuptools wheel && pip install -r requirements.txt`
+- Set start command: `gunicorn app:app`
 
 Deploy!
 
