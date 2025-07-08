@@ -7,16 +7,16 @@ YOLO Dataset Visualizer is a web application that allows you to visualize boundi
 - Single Image Visualization: Upload an image and its corresponding label file to see bounding boxes
 - Batch Processing: Process multiple images and labels simultaneously
 - Class Management: Define classes via text input or by uploading a classes.txt file
+- Modern UI: Responsive design with light/dark mode support
+- Progress Tracking: Real-time progress updates during processing
+- Direct Downloads: Download visualized images or zip archives
+
 
 ## Customizable Settings:
 - Adjust maximum image size
 - Set confidence threshold for bounding boxes
 
-## Modern UI: Responsive design with light/dark mode support
 
-## Progress Tracking: Real-time progress updates during processing
-
-## Direct Downloads: Download visualized images or zip archives
 
 
 ## Installation & Setup
