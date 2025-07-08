@@ -102,3 +102,4 @@ This project is open source and available under the MIT License.
 ---
 
 Note: This application is designed for visualizing YOLO format datasets. It does not perform object detection but rather visualizes existing label data on images.
+There are also some UI related issues that I have to fix soon, but this does not affect the overall functionality of the webapp.
