@@ -31,6 +31,7 @@ Python 3.11.x (as specified in runtime.txt)
 ```bash
 git clone https://github.com/johnnietse/boundingBoxVisualizer.git
 cd boundingBoxVisualizer
+```
 
 2. Create and activate a virtual environment:
 ```
