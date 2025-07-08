@@ -1,95 +1,1442 @@
-<!-- templates/index.html -->
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>YOLO Dataset Visualizer</title>-->
+<!--    <style>-->
+<!--        * { box-sizing: border-box; }-->
+<!--        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }-->
+<!--        .container { background-color: #f5f5f5; padding: 20px; border-radius: 8px; }-->
+<!--        .form-group { margin-bottom: 15px; }-->
+<!--        label { display: block; margin-bottom: 5px; font-weight: bold; }-->
+<!--        input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }-->
+<!--        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }-->
+<!--        button:hover { background-color: #45a049; }-->
+<!--        button:disabled { background-color: #cccccc; cursor: not-allowed; }-->
+<!--        .tabs { display: flex; margin-bottom: 15px; }-->
+<!--        .tab { padding: 10px 15px; cursor: pointer; border: 1px solid #ddd; }-->
+<!--        .tab.active { background-color: #4CAF50; color: white; }-->
+<!--        .tab-content { display: none; }-->
+<!--        .tab-content.active { display: block; }-->
+<!--        .drop-area {-->
+<!--            border: 2px dashed #ccc;-->
+<!--            border-radius: 8px;-->
+<!--            padding: 30px;-->
+<!--            text-align: center;-->
+<!--            margin-bottom: 15px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--        .drop-area.active {-->
+<!--            border-color: #4CAF50;-->
+<!--            background-color: #f0fff0;-->
+<!--        }-->
+<!--        .file-list {-->
+<!--            margin-top: 15px;-->
+<!--            max-height: 200px;-->
+<!--            overflow-y: auto;-->
+<!--            border: 1px solid #ddd;-->
+<!--            padding: 10px;-->
+<!--            border-radius: 4px;-->
+<!--        }-->
+<!--        .file-item {-->
+<!--            padding: 5px;-->
+<!--            border-bottom: 1px solid #eee;-->
+<!--            display: flex;-->
+<!--            justify-content: space-between;-->
+<!--        }-->
+<!--        .file-item:last-child { border-bottom: none; }-->
+<!--        .remove-file { color: red; cursor: pointer; }-->
+<!--        .progress-container {-->
+<!--            height: 20px;-->
+<!--            background-color: #f1f1f1;-->
+<!--            margin-top: 10px;-->
+<!--            display: none;-->
+<!--            border-radius: 10px;-->
+<!--            overflow: hidden;-->
+<!--        }-->
+<!--        .progress-bar {-->
+<!--            height: 100%;-->
+<!--            background-color: #4CAF50;-->
+<!--            width: 0%;-->
+<!--            transition: width 0.3s;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            color: white;-->
+<!--            font-size: 12px;-->
+<!--        }-->
+<!--        .note { color: #666; font-size: 0.9em; margin-top: 5px; }-->
+<!--        .file-section { margin-bottom: 20px; }-->
+<!--        .status-container {-->
+<!--            margin-top: 20px;-->
+<!--            padding: 15px;-->
+<!--            border: 1px solid #ddd;-->
+<!--            border-radius: 5px;-->
+<!--            background-color: #f9f9f9;-->
+<!--            display: none;-->
+<!--            max-height: 300px;-->
+<!--            overflow-y: auto;-->
+<!--        }-->
+<!--        .status-item {-->
+<!--            padding: 8px;-->
+<!--            margin-bottom: 5px;-->
+<!--            border-radius: 4px;-->
+<!--        }-->
+<!--        .status-processing { background-color: #e6f7ff; border-left: 4px solid #1890ff; }-->
+<!--        .status-progress { background-color: #fffbe6; border-left: 4px solid #faad14; }-->
+<!--        .status-complete { background-color: #f6ffed; border-left: 4px solid #52c41a; }-->
+<!--        .status-error { background-color: #fff2f0; border-left: 4px solid #ff4d4f; }-->
+<!--        .hidden { display: none; }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--    <div class="container">-->
+<!--        <h1>YOLO Dataset Visualizer</h1>-->
+
+<!--        <form id="visualizer-form">-->
+<!--            &lt;!&ndash; Hidden field to track processing mode &ndash;&gt;-->
+<!--            <input type="hidden" id="processing_mode" name="processing_mode" value="single">-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="class_names">Class Names (one per line):</label>-->
+<!--                <textarea id="class_names" name="class_names" rows="5" placeholder="person&#10;car&#10;bicycle"></textarea>-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="classes_file">Or upload classes.txt:</label>-->
+<!--                <input type="file" id="classes_file" name="classes_file" accept=".txt">-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="max_size">Max Image Size:</label>-->
+<!--                <input type="number" id="max_size" name="max_size" value="1000">-->
+<!--            </div>-->
+
+<!--            <div class="form-group">-->
+<!--                <label for="conf_threshold">Confidence Threshold:</label>-->
+<!--                <input type="number" step="0.01" id="conf_threshold" name="conf_threshold" value="0.25">-->
+<!--            </div>-->
+
+<!--            <div class="tabs">-->
+<!--                <div class="tab active" data-tab="single">Single Image</div>-->
+<!--                <div class="tab" data-tab="batch">Batch Processing</div>-->
+<!--            </div>-->
+
+<!--            <div id="single-tab" class="tab-content active">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="image">Image File:</label>-->
+<!--                    <input type="file" id="image" name="image" accept="image/*">-->
+<!--                </div>-->
+<!--                <div class="form-group">-->
+<!--                    <label for="label">Label File:</label>-->
+<!--                    <input type="file" id="label" name="label" accept=".txt">-->
+<!--                    <div class="note">Select both image and label for single image processing</div>-->
+<!--                </div>-->
+<!--                <button type="button" id="process-btn">Visualize Image</button>-->
+<!--            </div>-->
+
+<!--            <div id="batch-tab" class="tab-content">-->
+<!--                <div class="file-section">-->
+<!--                    <div class="form-group">-->
+<!--                        <label>Upload Image Files:</label>-->
+<!--                        <div id="drop-area-images" class="drop-area">-->
+<!--                            <p>Drag & drop image files here or click to browse</p>-->
+<!--                            <p><small>Supported formats: JPG, PNG, BMP, WEBP</small></p>-->
+<!--                            <input type="file" id="batch_images" name="batch_images" multiple-->
+<!--                                   accept=".jpg,.jpeg,.png,.bmp,.webp" style="display: none;">-->
+<!--                        </div>-->
+<!--                        <div id="image-file-list" class="file-list">No files selected</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="file-section">-->
+<!--                    <div class="form-group">-->
+<!--                        <label>Upload Label Files:</label>-->
+<!--                        <div id="drop-area-labels" class="drop-area">-->
+<!--                            <p>Drag & drop label files here or click to browse</p>-->
+<!--                            <p><small>Supported format: .txt</small></p>-->
+<!--                            <input type="file" id="batch_labels" name="batch_labels" multiple-->
+<!--                                   accept=".txt" style="display: none;">-->
+<!--                        </div>-->
+<!--                        <div id="label-file-list" class="file-list">No files selected</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                <div class="note">-->
+<!--                    <p>Files will be matched by their base names (e.g., image1.jpg and image1.txt)</p>-->
+<!--                    <p>Only files with matching names will be processed</p>-->
+<!--                </div>-->
+
+<!--                <button type="button" id="batch-process-btn">Visualize Batch</button>-->
+<!--            </div>-->
+
+<!--            <div class="progress-container" id="progress-container">-->
+<!--                <div class="progress-bar" id="progress-bar">0%</div>-->
+<!--            </div>-->
+
+<!--            <div class="status-container" id="status-container">-->
+<!--                <div id="status-messages"></div>-->
+<!--            </div>-->
+<!--        </form>-->
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            const tabs = document.querySelectorAll('.tab');-->
+<!--            const tabContents = document.querySelectorAll('.tab-content');-->
+<!--            const dropAreaImages = document.getElementById('drop-area-images');-->
+<!--            const dropAreaLabels = document.getElementById('drop-area-labels');-->
+<!--            const imagesInput = document.getElementById('batch_images');-->
+<!--            const labelsInput = document.getElementById('batch_labels');-->
+<!--            const imageFileList = document.getElementById('image-file-list');-->
+<!--            const labelFileList = document.getElementById('label-file-list');-->
+<!--            const progressContainer = document.getElementById('progress-container');-->
+<!--            const progressBar = document.getElementById('progress-bar');-->
+<!--            const statusContainer = document.getElementById('status-container');-->
+<!--            const statusMessages = document.getElementById('status-messages');-->
+<!--            const singleProcessBtn = document.getElementById('process-btn');-->
+<!--            const batchProcessBtn = document.getElementById('batch-process-btn');-->
+<!--            const processingMode = document.getElementById('processing_mode');-->
+
+<!--            // Tab switching-->
+<!--            tabs.forEach(tab => {-->
+<!--                tab.addEventListener('click', () => {-->
+<!--                    tabs.forEach(t => t.classList.remove('active'));-->
+<!--                    tabContents.forEach(tc => tc.classList.remove('active'));-->
+
+<!--                    tab.classList.add('active');-->
+<!--                    const tabName = tab.getAttribute('data-tab');-->
+<!--                    document.getElementById(`${tabName}-tab`).classList.add('active');-->
+
+<!--                    // Update processing mode-->
+<!--                    processingMode.value = tabName;-->
+<!--                });-->
+<!--            });-->
+
+<!--            // Setup drag and drop for images-->
+<!--            setupDragDrop(dropAreaImages, imagesInput, imageFileList);-->
+
+<!--            // Setup drag and drop for labels-->
+<!--            setupDragDrop(dropAreaLabels, labelsInput, labelFileList);-->
+
+<!--            function setupDragDrop(dropArea, input, fileListElement) {-->
+<!--                // File drag and drop-->
+<!--                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {-->
+<!--                    dropArea.addEventListener(eventName, preventDefaults, false);-->
+<!--                });-->
+
+<!--                function preventDefaults(e) {-->
+<!--                    e.preventDefault();-->
+<!--                    e.stopPropagation();-->
+<!--                }-->
+
+<!--                ['dragenter', 'dragover'].forEach(eventName => {-->
+<!--                    dropArea.addEventListener(eventName, highlight, false);-->
+<!--                });-->
+
+<!--                ['dragleave', 'drop'].forEach(eventName => {-->
+<!--                    dropArea.addEventListener(eventName, unhighlight, false);-->
+<!--                });-->
+
+<!--                function highlight() {-->
+<!--                    dropArea.classList.add('active');-->
+<!--                }-->
+
+<!--                function unhighlight() {-->
+<!--                    dropArea.classList.remove('active');-->
+<!--                }-->
+
+<!--                dropArea.addEventListener('drop', handleDrop, false);-->
+<!--                dropArea.addEventListener('click', () => input.click());-->
+
+<!--                input.addEventListener('change', handleFiles);-->
+
+<!--                function handleDrop(e) {-->
+<!--                    const dt = e.dataTransfer;-->
+<!--                    if (dt.files.length) {-->
+<!--                        input.files = dt.files;-->
+<!--                        handleFiles();-->
+<!--                    }-->
+<!--                }-->
+
+<!--                function handleFiles() {-->
+<!--                    renderFileList(Array.from(input.files), fileListElement);-->
+<!--                }-->
+<!--            }-->
+
+<!--            function renderFileList(files, container) {-->
+<!--                container.innerHTML = '';-->
+
+<!--                if (files.length === 0) {-->
+<!--                    container.innerHTML = '<p>No files selected</p>';-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                files.forEach((file, index) => {-->
+<!--                    const fileItem = document.createElement('div');-->
+<!--                    fileItem.className = 'file-item';-->
+
+<!--                    const fileInfo = document.createElement('span');-->
+<!--                    fileInfo.textContent = `${file.name} (${formatFileSize(file.size)})`;-->
+
+<!--                    const removeBtn = document.createElement('span');-->
+<!--                    removeBtn.className = 'remove-file';-->
+<!--                    removeBtn.textContent = '✕';-->
+<!--                    removeBtn.onclick = () => {-->
+<!--                        const dataTransfer = new DataTransfer();-->
+<!--                        const input = container.id === 'image-file-list' ? imagesInput : labelsInput;-->
+<!--                        const currentFiles = Array.from(input.files);-->
+<!--                        currentFiles.splice(index, 1);-->
+
+<!--                        currentFiles.forEach(f => dataTransfer.items.add(f));-->
+<!--                        input.files = dataTransfer.files;-->
+<!--                        renderFileList(currentFiles, container);-->
+<!--                    };-->
+
+<!--                    fileItem.appendChild(fileInfo);-->
+<!--                    fileItem.appendChild(removeBtn);-->
+<!--                    container.appendChild(fileItem);-->
+<!--                });-->
+<!--            }-->
+
+<!--            function formatFileSize(bytes) {-->
+<!--                if (bytes === 0) return '0 Bytes';-->
+<!--                const k = 1024;-->
+<!--                const sizes = ['Bytes', 'KB', 'MB', 'GB'];-->
+<!--                const i = Math.floor(Math.log(bytes) / Math.log(k));-->
+<!--                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];-->
+<!--            }-->
+
+<!--            function addStatusMessage(message, type) {-->
+<!--                const messageDiv = document.createElement('div');-->
+<!--                messageDiv.className = `status-item status-${type}`;-->
+<!--                messageDiv.textContent = message;-->
+<!--                statusMessages.appendChild(messageDiv);-->
+<!--                statusContainer.scrollTop = statusContainer.scrollHeight;-->
+<!--            }-->
+
+<!--            // Single image processing-->
+<!--            singleProcessBtn.addEventListener('click', function() {-->
+<!--                // Show progress-->
+<!--                progressContainer.style.display = 'block';-->
+<!--                progressBar.style.width = '0%';-->
+<!--                progressBar.textContent = '0%';-->
+<!--                statusContainer.style.display = 'block';-->
+<!--                statusMessages.innerHTML = '';-->
+<!--                singleProcessBtn.disabled = true;-->
+
+<!--                // Create FormData-->
+<!--                const formData = new FormData();-->
+
+<!--                // Add parameters-->
+<!--                formData.append('processing_mode', 'single');-->
+<!--                formData.append('max_size', document.getElementById('max_size').value);-->
+<!--                formData.append('conf_threshold', document.getElementById('conf_threshold').value);-->
+<!--                formData.append('class_names', document.getElementById('class_names').value);-->
+
+<!--                // Add classes file if uploaded-->
+<!--                const classesFile = document.getElementById('classes_file').files[0];-->
+<!--                if (classesFile) {-->
+<!--                    formData.append('classes_file', classesFile);-->
+<!--                }-->
+
+<!--                // Add image and label-->
+<!--                const imageInput = document.getElementById('image');-->
+<!--                const labelInput = document.getElementById('label');-->
+
+<!--                if (!imageInput.files[0]) {-->
+<!--                    addStatusMessage('Please select an image file', 'error');-->
+<!--                    singleProcessBtn.disabled = false;-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                formData.append('image', imageInput.files[0]);-->
+<!--                if (labelInput.files[0]) {-->
+<!--                    formData.append('label', labelInput.files[0]);-->
+<!--                }-->
+
+<!--                // Submit via AJAX-->
+<!--                const xhr = new XMLHttpRequest();-->
+<!--                xhr.open('POST', '/process', true);-->
+
+<!--                xhr.onload = function() {-->
+<!--                    singleProcessBtn.disabled = false;-->
+
+<!--                    if (xhr.status === 200) {-->
+<!--                        // Create download link-->
+<!--                        const blob = new Blob([xhr.response], {type: 'image/jpeg'});-->
+<!--                        const url = URL.createObjectURL(blob);-->
+<!--                        const a = document.createElement('a');-->
+<!--                        a.href = url;-->
+<!--                        a.download = 'visualized_' + document.getElementById('image').files[0].name;-->
+<!--                        document.body.appendChild(a);-->
+<!--                        a.click();-->
+<!--                        setTimeout(() => {-->
+<!--                            document.body.removeChild(a);-->
+<!--                            URL.revokeObjectURL(url);-->
+<!--                        }, 100);-->
+
+<!--                        // Add status message-->
+<!--                        addStatusMessage('Image processed and downloaded', 'complete');-->
+<!--                    } else {-->
+<!--                        try {-->
+<!--                            const error = JSON.parse(xhr.responseText).error;-->
+<!--                            addStatusMessage(`Error: ${error}`, 'error');-->
+<!--                        } catch {-->
+<!--                            addStatusMessage('An error occurred during processing', 'error');-->
+<!--                        }-->
+<!--                    }-->
+<!--                };-->
+
+<!--                xhr.onerror = function() {-->
+<!--                    singleProcessBtn.disabled = false;-->
+<!--                    addStatusMessage('An error occurred during processing', 'error');-->
+<!--                };-->
+
+<!--                xhr.responseType = 'blob';-->
+<!--                xhr.send(formData);-->
+<!--            });-->
+
+<!--            // Batch processing-->
+<!--            batchProcessBtn.addEventListener('click', function() {-->
+<!--                // Get files from the inputs-->
+<!--                const imageFiles = Array.from(imagesInput.files);-->
+<!--                const labelFiles = Array.from(labelsInput.files);-->
+
+<!--                if (imageFiles.length === 0 || labelFiles.length === 0) {-->
+<!--                    addStatusMessage('Please upload both images and labels', 'error');-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                // Show progress-->
+<!--                progressContainer.style.display = 'block';-->
+<!--                progressBar.style.width = '0%';-->
+<!--                progressBar.textContent = '0%';-->
+<!--                statusContainer.style.display = 'block';-->
+<!--                statusMessages.innerHTML = '';-->
+<!--                batchProcessBtn.disabled = true;-->
+
+<!--                // Create FormData-->
+<!--                const formData = new FormData();-->
+
+<!--                // Add parameters-->
+<!--                formData.append('processing_mode', 'batch');-->
+<!--                formData.append('max_size', document.getElementById('max_size').value);-->
+<!--                formData.append('conf_threshold', document.getElementById('conf_threshold').value);-->
+<!--                formData.append('class_names', document.getElementById('class_names').value);-->
+
+<!--                // Add classes file if uploaded-->
+<!--                const classesFile = document.getElementById('classes_file').files[0];-->
+<!--                if (classesFile) {-->
+<!--                    formData.append('classes_file', classesFile);-->
+<!--                }-->
+
+<!--                // Add images-->
+<!--                imageFiles.forEach(file => {-->
+<!--                    formData.append('batch_images', file);-->
+<!--                });-->
+
+<!--                // Add labels-->
+<!--                labelFiles.forEach(file => {-->
+<!--                    formData.append('batch_labels', file);-->
+<!--                });-->
+
+<!--                // Create XMLHttpRequest for processing-->
+<!--                const xhr = new XMLHttpRequest();-->
+<!--                xhr.open('POST', '/process', true);-->
+
+<!--                // Show processing status-->
+<!--                addStatusMessage('Processing started...', 'processing');-->
+<!--                progressBar.style.backgroundColor = '#4CAF50';-->
+
+<!--                // Handle progress-->
+<!--                xhr.onprogress = function(event) {-->
+<!--                    if (event.lengthComputable) {-->
+<!--                        const percent = Math.round((event.loaded / event.total) * 100);-->
+<!--                        progressBar.style.width = percent + '%';-->
+<!--                        progressBar.textContent = percent + '%';-->
+<!--                    }-->
+<!--                };-->
+
+<!--                // Handle response-->
+<!--                xhr.onload = function() {-->
+<!--                    batchProcessBtn.disabled = false;-->
+
+<!--                    if (xhr.status === 200) {-->
+<!--                        // Create download link-->
+<!--                        const blob = new Blob([xhr.response], {type: 'application/zip'});-->
+<!--                        const url = URL.createObjectURL(blob);-->
+<!--                        const a = document.createElement('a');-->
+<!--                        a.href = url;-->
+<!--                        a.download = 'visualized_images.zip';-->
+<!--                        document.body.appendChild(a);-->
+<!--                        a.click();-->
+
+<!--                        setTimeout(() => {-->
+<!--                            document.body.removeChild(a);-->
+<!--                            URL.revokeObjectURL(url);-->
+<!--                        }, 100);-->
+
+<!--                        addStatusMessage('Batch processed and zip downloaded', 'complete');-->
+<!--                    } else {-->
+<!--                        try {-->
+<!--                            const error = JSON.parse(xhr.responseText).error;-->
+<!--                            addStatusMessage(`Error: ${error}`, 'error');-->
+<!--                        } catch {-->
+<!--                            addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                        }-->
+<!--                    }-->
+<!--                };-->
+
+<!--                xhr.onerror = function() {-->
+<!--                    batchProcessBtn.disabled = false;-->
+<!--                    addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                };-->
+
+<!--                xhr.responseType = 'blob';-->
+<!--                xhr.send(formData);-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLO Dataset Visualizer</title>
+    <title>YOLO Dataset Visualizer | Modern</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7e22ce',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                        },
+                        light: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            300: '#cbd5e1',
+                            400: '#94a3b8',
+                            500: '#64748b',
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .container { background-color: #f5f5f5; padding: 20px; border-radius: 8px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; }
-        input, textarea, select { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
-        button { background-color: #4CAF50; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; }
-        button:hover { background-color: #45a049; }
-        .tabs { display: flex; margin-bottom: 15px; }
-        .tab { padding: 10px 15px; cursor: pointer; border: 1px solid #ddd; }
-        .tab.active { background-color: #4CAF50; color: white; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        * {
+            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            min-height: 100vh;
+        }
+
+        body.dark {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-card {
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px dashed rgba(148, 163, 184, 0.3);
+        }
+
+        .dark .file-card {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .tab-active {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: #a855f7;
+            color: #a855f7;
+        }
+
+        .dark .tab-active {
+            background: rgba(168, 85, 247, 0.15);
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background: rgba(203, 213, 225, 0.3);
+        }
+
+        .dark .progress-bar {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(90deg, #a855f7, #c084fc);
+            transition: width 0.5s ease;
+        }
+
+        .drop-area {
+            border: 2px dashed rgba(148, 163, 184, 0.3);
+        }
+
+        .dark .drop-area {
+            border: 2px dashed rgba(148, 163, 184, 0.3);
+        }
+
+        .drop-area.active {
+            border-color: #a855f7;
+            background: rgba(168, 85, 247, 0.05);
+        }
+
+        .status-processing {
+            border-left: 4px solid #a855f7;
+        }
+
+        .status-complete {
+            border-left: 4px solid #10b981;
+        }
+
+        .status-error {
+            border-left: 4px solid #ef4444;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);
+            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(203, 213, 225, 0.3);
+            color: #475569;
+        }
+
+        .dark .btn-secondary {
+            background: rgba(30, 41, 59, 0.8);
+            color: #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(168, 85, 247, 0.1);
+            border-color: #a855f7;
+            color: #a855f7;
+        }
+
+        .file-item {
+            background: rgba(241, 245, 249, 0.6);
+        }
+
+        .dark .file-item {
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        .theme-toggle {
+            background: rgba(241, 245, 249, 0.8);
+        }
+
+        .dark .theme-toggle {
+            background: rgba(30, 41, 59, 0.8);
+        }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1>YOLO Dataset Visualizer</h1>
+<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <!-- Theme Toggle -->
+    <div class="fixed top-4 right-4 z-10">
+        <button id="theme-toggle" class="theme-toggle p-2 rounded-full shadow-md">
+            <i id="theme-icon" class="fas fa-moon text-purple-600"></i>
+        </button>
+    </div>
 
-        <form action="/process" method="post" enctype="multipart/form-data">
-            <div class="form-group">
-                <label for="class_names">Class Names (one per line):</label>
-                <textarea id="class_names" name="class_names" rows="5" placeholder="person&#10;car&#10;bicycle"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="classes_file">Or upload classes.txt:</label>
-                <input type="file" id="classes_file" name="classes_file" accept=".txt">
-            </div>
-
-            <div class="form-group">
-                <label for="max_size">Max Image Size:</label>
-                <input type="number" id="max_size" name="max_size" value="1000">
-            </div>
-
-            <div class="form-group">
-                <label for="conf_threshold">Confidence Threshold:</label>
-                <input type="number" step="0.01" id="conf_threshold" name="conf_threshold" value="0.25">
-            </div>
-
-            <div class="tabs">
-                <div class="tab active" data-tab="single">Single Image</div>
-                <div class="tab" data-tab="batch">Batch Processing</div>
-            </div>
-
-            <div id="single-tab" class="tab-content active">
-                <div class="form-group">
-                    <label for="image">Image File:</label>
-                    <input type="file" id="image" name="image" accept="image/*">
-                </div>
-                <div class="form-group">
-                    <label for="label">Label File (optional):</label>
-                    <input type="file" id="label" name="label" accept=".txt">
+    <div class="max-w-4xl mx-auto">
+        <!-- Header -->
+        <header class="mb-10 text-center">
+            <div class="flex justify-center mb-4">
+                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center floating">
+                    <i class="fas fa-eye text-white text-2xl"></i>
                 </div>
             </div>
+            <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">YOLO Dataset Visualizer</h1>
+            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Visualize your YOLO datasets with bounding boxes and class labels in seconds</p>
+        </header>
 
-            <div id="batch-tab" class="tab-content">
-                <div class="form-group">
-                    <label for="zip_file">Dataset ZIP File:</label>
-                    <input type="file" id="zip_file" name="zip_file" accept=".zip">
-                    <small>Should contain images and .txt labels with same filenames</small>
+        <!-- Main Card -->
+        <div class="glass-panel p-6 sm:p-8">
+            <form id="visualizer-form">
+                <!-- Hidden field to track processing mode -->
+                <input type="hidden" id="processing_mode" name="processing_mode" value="single">
+
+                <!-- Class Names Section -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">
+                        <i class="fas fa-tags mr-2 text-purple-500"></i> Class Configuration
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="class_names" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Class Names (one per line)
+                            </label>
+                            <textarea
+                                id="class_names"
+                                name="class_names"
+                                rows="5"
+                                class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200"
+                                placeholder="person&#10;car&#10;bicycle"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="classes_file" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Or upload classes.txt
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="file"
+                                    id="classes_file"
+                                    name="classes_file"
+                                    accept=".txt"
+                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                <div class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">
+                                    <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>
+                                    <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>
+                                    <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <button type="submit">Visualize Dataset</button>
-        </form>
+                <!-- Visualization Settings -->
+                <div class="mb-8">
+                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">
+                        <i class="fas fa-sliders-h mr-2 text-purple-500"></i> Visualization Settings
+                    </h2>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="max_size" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Max Image Size
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="number"
+                                    id="max_size"
+                                    name="max_size"
+                                    value="1000"
+                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">
+                                <i class="fas fa-expand-arrows-alt absolute left-3 top-3.5 text-slate-500"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Maximum dimension for processed images</p>
+                        </div>
+
+                        <div>
+                            <label for="conf_threshold" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                Confidence Threshold
+                            </label>
+                            <div class="relative">
+                                <input
+                                    type="number"
+                                    step="0.01"
+                                    id="conf_threshold"
+                                    name="conf_threshold"
+                                    value="0.25"
+                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">
+                                <i class="fas fa-percent absolute left-3 top-3.5 text-slate-500"></i>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-1">Minimum confidence to display bounding box</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mb-8">
+                    <div class="flex space-x-1 mb-6">
+                        <div
+                            class="tab tab-active px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-700 dark:text-slate-300 font-medium"
+                            data-tab="single">
+                            <i class="fas fa-image mr-2"></i> Single Image
+                        </div>
+                        <div
+                            class="tab px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-medium"
+                            data-tab="batch">
+                            <i class="fas fa-layer-group mr-2"></i> Batch Processing
+                        </div>
+                    </div>
+
+                    <!-- Single Image Tab -->
+                    <div id="single-tab" class="tab-content">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="image" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                    Image File
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="file"
+                                        id="image"
+                                        name="image"
+                                        accept="image/*"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <div id="image-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">
+                                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>
+                                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>
+                                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>
+                                    </div>
+                                </div>
+                                <div id="image-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>
+                            </div>
+
+                            <div>
+                                <label for="label" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                    Label File
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        type="file"
+                                        id="label"
+                                        name="label"
+                                        accept=".txt"
+                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                    <div id="label-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">
+                                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>
+                                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>
+                                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>
+                                    </div>
+                                </div>
+                                <div id="label-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6">
+                            <button type="button" id="process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">
+                                <i class="fas fa-magic mr-2"></i> Visualize Image
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Batch Processing Tab -->
+                    <div id="batch-tab" class="tab-content hidden">
+                        <div class="mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                        Image Files
+                                    </label>
+                                    <div id="drop-area-images" class="drop-area relative p-6 rounded-lg transition-colors">
+                                        <input
+                                            type="file"
+                                            id="batch_images"
+                                            name="batch_images"
+                                            multiple
+                                            accept=".jpg,.jpeg,.png,.bmp,.webp"
+                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
+                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop image files here</p>
+                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>
+                                        </div>
+                                    </div>
+                                    <div id="image-file-list" class="mt-4 max-h-40 overflow-y-auto">
+                                        <div class="text-center py-4 text-slate-500">
+                                            <i class="fas fa-folder-open mb-2"></i>
+                                            <p>No files selected</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                                        Label Files
+                                    </label>
+                                    <div id="drop-area-labels" class="drop-area relative p-6 rounded-lg transition-colors">
+                                        <input
+                                            type="file"
+                                            id="batch_labels"
+                                            name="batch_labels"
+                                            multiple
+                                            accept=".txt"
+                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                                        <div class="text-center">
+                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>
+                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop label files here</p>
+                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>
+                                        </div>
+                                    </div>
+                                    <div id="label-file-list" class="mt-4 max-h-40 overflow-y-auto">
+                                        <div class="text-center py-4 text-slate-500">
+                                            <i class="fas fa-folder-open mb-2"></i>
+                                            <p>No files selected</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-sm text-slate-600 dark:text-slate-400 mb-6 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                            <i class="fas fa-info-circle text-purple-500 mr-2"></i>
+                            Files will be matched by their base names (e.g., image1.jpg and image1.txt). Only files with matching names will be processed.
+                        </div>
+
+                        <div>
+                            <button type="button" id="batch-process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">
+                                <i class="fas fa-bolt mr-2"></i> Visualize Batch
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress and Status -->
+                <div class="mt-8">
+                    <div class="progress-container hidden mb-4">
+                        <div class="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-2">
+                            <span>Processing</span>
+                            <span id="progress-text">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div id="status-container" class="hidden">
+                        <h3 class="text-lg font-medium text-slate-800 dark:text-slate-300 mb-3 flex items-center">
+                            <i class="fas fa-history mr-2 text-purple-500"></i> Processing Status
+                        </h3>
+                        <div id="status-messages" class="space-y-3 max-h-60 overflow-y-auto p-2"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-slate-500 text-sm">
+            <p>YOLO Dataset Visualizer v2.0 | Modern Edition</p>
+            <p class="mt-2">Powered by Flask & Tailwind CSS</p>
+        </footer>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Theme toggle functionality
+            const themeToggle = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const body = document.body;
+
+            // Check for saved theme preference or respect OS setting
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                body.classList.add('dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+
+            themeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark');
+                const isDarkMode = body.classList.contains('dark');
+                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');
+
+                if (isDarkMode) {
+                    themeIcon.classList.remove('fa-moon');
+                    themeIcon.classList.add('fa-sun');
+                } else {
+                    themeIcon.classList.remove('fa-sun');
+                    themeIcon.classList.add('fa-moon');
+                }
+            });
+
+            // DOM elements
             const tabs = document.querySelectorAll('.tab');
             const tabContents = document.querySelectorAll('.tab-content');
+            const dropAreaImages = document.getElementById('drop-area-images');
+            const dropAreaLabels = document.getElementById('drop-area-labels');
+            const imagesInput = document.getElementById('batch_images');
+            const labelsInput = document.getElementById('batch_labels');
+            const imageFileList = document.getElementById('image-file-list');
+            const labelFileList = document.getElementById('label-file-list');
+            const progressContainer = document.querySelector('.progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            const progressText = document.getElementById('progress-text');
+            const statusContainer = document.getElementById('status-container');
+            const statusMessages = document.getElementById('status-messages');
+            const singleProcessBtn = document.getElementById('process-btn');
+            const batchProcessBtn = document.getElementById('batch-process-btn');
+            const processingMode = document.getElementById('processing_mode');
 
+            // File info elements for single image mode
+            const imageFileInfo = document.getElementById('image-file-info');
+            const labelFileInfo = document.getElementById('label-file-info');
+            const imageUploadArea = document.getElementById('image-upload-area');
+            const labelUploadArea = document.getElementById('label-upload-area');
+
+            // Tab switching
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Remove active classes
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tabContents.forEach(tc => tc.classList.remove('active'));
+                    tabs.forEach(t => t.classList.remove('tab-active', 'border-purple-500', 'text-purple-500'));
+                    tab.classList.add('tab-active', 'border-purple-500', 'text-purple-500');
 
-                    // Add active class to clicked tab
-                    tab.classList.add('active');
                     const tabName = tab.getAttribute('data-tab');
-                    document.getElementById(`${tabName}-tab`).classList.add('active');
+                    tabContents.forEach(tc => tc.classList.add('hidden'));
+                    document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+
+                    // Update processing mode
+                    processingMode.value = tabName;
                 });
+            });
+
+            // Setup drag and drop for images
+            setupDragDrop(dropAreaImages, imagesInput, imageFileList);
+            setupDragDrop(dropAreaLabels, labelsInput, labelFileList);
+
+            // Setup file selection for single image mode
+            document.getElementById('image').addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    imageFileInfo.innerHTML = `<i class="fas fa-file-image mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;
+                    imageUploadArea.innerHTML = `
+                        <i class="fas fa-file-image text-3xl text-purple-500 mb-2"></i>
+                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>
+                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>
+                    `;
+                } else {
+                    imageFileInfo.innerHTML = '';
+                    imageUploadArea.innerHTML = `
+                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>
+                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>
+                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>
+                    `;
+                }
+            });
+
+            document.getElementById('label').addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    const file = this.files[0];
+                    labelFileInfo.innerHTML = `<i class="fas fa-file-alt mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;
+                    labelUploadArea.innerHTML = `
+                        <i class="fas fa-file-alt text-3xl text-purple-500 mb-2"></i>
+                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>
+                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>
+                    `;
+                } else {
+                    labelFileInfo.innerHTML = '';
+                    labelUploadArea.innerHTML = `
+                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>
+                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>
+                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>
+                    `;
+                }
+            });
+
+            function setupDragDrop(dropArea, input, fileListElement) {
+                // File drag and drop
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, preventDefaults, false);
+                });
+
+                function preventDefaults(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, highlight, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, unhighlight, false);
+                });
+
+                function highlight() {
+                    dropArea.classList.add('active');
+                }
+
+                function unhighlight() {
+                    dropArea.classList.remove('active');
+                }
+
+                dropArea.addEventListener('drop', handleDrop, false);
+                dropArea.addEventListener('click', () => input.click());
+
+                input.addEventListener('change', handleFiles);
+
+                function handleDrop(e) {
+                    const dt = e.dataTransfer;
+                    if (dt.files.length) {
+                        input.files = dt.files;
+                        handleFiles();
+                    }
+                }
+
+                function handleFiles() {
+                    renderFileList(Array.from(input.files), fileListElement);
+                }
+            }
+
+            function renderFileList(files, container) {
+                container.innerHTML = '';
+
+                if (files.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-4 text-slate-500">
+                            <i class="fas fa-folder-open mb-2"></i>
+                            <p>No files selected</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-800 rounded-lg mb-2';
+
+                    const fileInfo = document.createElement('div');
+                    fileInfo.className = 'flex items-center';
+
+                    const fileIcon = document.createElement('i');
+                    fileIcon.className = file.type.includes('image') ?
+                        'fas fa-file-image text-purple-500 mr-3' : 'fas fa-file-alt text-purple-500 mr-3';
+
+                    const fileDetails = document.createElement('div');
+
+                    const fileName = document.createElement('div');
+                    fileName.className = 'text-slate-700 dark:text-slate-300 text-sm truncate max-w-[180px]';
+                    fileName.textContent = file.name;
+
+                    const fileSize = document.createElement('div');
+                    fileSize.className = 'text-slate-500 text-xs';
+                    fileSize.textContent = formatFileSize(file.size);
+
+                    fileDetails.appendChild(fileName);
+                    fileDetails.appendChild(fileSize);
+                    fileInfo.appendChild(fileIcon);
+                    fileInfo.appendChild(fileDetails);
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'text-slate-500 hover:text-rose-500';
+                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+                    removeBtn.onclick = () => {
+                        const dataTransfer = new DataTransfer();
+                        const input = container.id === 'image-file-list' ? imagesInput : labelsInput;
+                        const currentFiles = Array.from(input.files);
+                        currentFiles.splice(index, 1);
+
+                        currentFiles.forEach(f => dataTransfer.items.add(f));
+                        input.files = dataTransfer.files;
+                        renderFileList(currentFiles, container);
+                    };
+
+                    fileItem.appendChild(fileInfo);
+                    fileItem.appendChild(removeBtn);
+                    container.appendChild(fileItem);
+                });
+            }
+
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            function addStatusMessage(message, type) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `status-item p-3 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-start ${
+                    type === 'processing' ? 'status-processing' :
+                    type === 'complete' ? 'status-complete' :
+                    'status-error'
+                }`;
+
+                let icon = '';
+                let iconClass = '';
+
+                if (type === 'processing') {
+                    icon = '<i class="fas fa-sync-alt animate-spin"></i>';
+                    iconClass = 'text-purple-500';
+                } else if (type === 'complete') {
+                    icon = '<i class="fas fa-check-circle"></i>';
+                    iconClass = 'text-emerald-500';
+                } else {
+                    icon = '<i class="fas fa-exclamation-circle"></i>';
+                    iconClass = 'text-rose-500';
+                }
+
+                messageDiv.innerHTML = `
+                    <div class="mr-3 text-lg ${iconClass}">${icon}</div>
+                    <div class="text-slate-700 dark:text-slate-300">${message}</div>
+                `;
+
+                statusMessages.appendChild(messageDiv);
+                statusContainer.scrollTop = statusContainer.scrollHeight;
+            }
+
+            // Single image processing
+            singleProcessBtn.addEventListener('click', function() {
+                // Show progress
+                progressContainer.classList.remove('hidden');
+                progressFill.style.width = '0%';
+                progressText.textContent = '0%';
+                statusContainer.classList.remove('hidden');
+                statusMessages.innerHTML = '';
+                singleProcessBtn.disabled = true;
+                singleProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';
+
+                // Create FormData
+                const formData = new FormData();
+
+                // Add parameters
+                formData.append('processing_mode', 'single');
+                formData.append('max_size', document.getElementById('max_size').value);
+                formData.append('conf_threshold', document.getElementById('conf_threshold').value);
+                formData.append('class_names', document.getElementById('class_names').value);
+
+                // Add classes file if uploaded
+                const classesFile = document.getElementById('classes_file').files[0];
+                if (classesFile) {
+                    formData.append('classes_file', classesFile);
+                }
+
+                // Add image and label
+                const imageInput = document.getElementById('image');
+                const labelInput = document.getElementById('label');
+
+                if (!imageInput.files[0]) {
+                    addStatusMessage('Please select an image file', 'error');
+                    singleProcessBtn.disabled = false;
+                    singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';
+                    return;
+                }
+
+                formData.append('image', imageInput.files[0]);
+                if (labelInput.files[0]) {
+                    formData.append('label', labelInput.files[0]);
+                }
+
+                // Submit via AJAX
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/process', true);
+
+                // Show upload progress
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 100);
+                        progressFill.style.width = percent + '%';
+                        progressText.textContent = percent + '%';
+                    }
+                };
+
+                xhr.onload = function() {
+                    progressFill.style.width = '100%';
+                    progressText.textContent = '100%';
+
+                    setTimeout(() => {
+                        singleProcessBtn.disabled = false;
+                        singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';
+                    }, 1000);
+
+                    if (xhr.status === 200) {
+                        // Create download link
+                        const blob = new Blob([xhr.response], {type: 'image/jpeg'});
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'visualized_' + document.getElementById('image').files[0].name;
+                        document.body.appendChild(a);
+                        a.click();
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+
+                        // Add status message
+                        addStatusMessage('Image processed and downloaded', 'complete');
+                    } else {
+                        try {
+                            const error = JSON.parse(xhr.responseText).error;
+                            addStatusMessage(`Error: ${error}`, 'error');
+                        } catch {
+                            addStatusMessage('An error occurred during processing', 'error');
+                        }
+                    }
+                };
+
+                xhr.onerror = function() {
+                    singleProcessBtn.disabled = false;
+                    singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';
+                    addStatusMessage('An error occurred during processing', 'error');
+                };
+
+                xhr.responseType = 'blob';
+                xhr.send(formData);
+            });
+
+            // Batch processing
+            batchProcessBtn.addEventListener('click', function() {
+                // Get files from the inputs
+                const imageFiles = Array.from(imagesInput.files);
+                const labelFiles = Array.from(labelsInput.files);
+
+                if (imageFiles.length === 0 || labelFiles.length === 0) {
+                    addStatusMessage('Please upload both images and labels', 'error');
+                    return;
+                }
+
+                // Show progress
+                progressContainer.classList.remove('hidden');
+                progressFill.style.width = '0%';
+                progressText.textContent = '0%';
+                statusContainer.classList.remove('hidden');
+                statusMessages.innerHTML = '';
+                batchProcessBtn.disabled = true;
+                batchProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';
+
+                // Add initial status message
+                addStatusMessage('Starting batch processing...', 'processing');
+
+                // Create FormData
+                const formData = new FormData();
+
+                // Add parameters
+                formData.append('processing_mode', 'batch');
+                formData.append('max_size', document.getElementById('max_size').value);
+                formData.append('conf_threshold', document.getElementById('conf_threshold').value);
+                formData.append('class_names', document.getElementById('class_names').value);
+
+                // Add classes file if uploaded
+                const classesFile = document.getElementById('classes_file').files[0];
+                if (classesFile) {
+                    formData.append('classes_file', classesFile);
+                }
+
+                // Add images
+                imageFiles.forEach(file => {
+                    formData.append('batch_images', file);
+                });
+
+                // Add labels
+                labelFiles.forEach(file => {
+                    formData.append('batch_labels', file);
+                });
+
+                // Create XMLHttpRequest for processing
+                const xhr = new XMLHttpRequest();
+                xhr.open('POST', '/process', true);
+
+                // Show upload progress
+                xhr.upload.onprogress = function(event) {
+                    if (event.lengthComputable) {
+                        const percent = Math.round((event.loaded / event.total) * 50); // First 50% for upload
+                        progressFill.style.width = percent + '%';
+                        progressText.textContent = percent + '%';
+                    }
+                };
+
+                // Handle response
+                xhr.onload = function() {
+                    // Simulate processing progress
+                    let progress = 50;
+                    const interval = setInterval(() => {
+                        progress += 1;
+                        progressFill.style.width = progress + '%';
+                        progressText.textContent = progress + '%';
+
+                        if (progress >= 100) {
+                            clearInterval(interval);
+                            batchProcessBtn.disabled = false;
+                            batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';
+                        }
+                    }, 50);
+
+                    if (xhr.status === 200) {
+                        // Create download link
+                        const blob = new Blob([xhr.response], {type: 'application/zip'});
+                        const url = URL.createObjectURL(blob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'visualized_images.zip';
+                        document.body.appendChild(a);
+                        a.click();
+
+                        setTimeout(() => {
+                            document.body.removeChild(a);
+                            URL.revokeObjectURL(url);
+                        }, 100);
+
+                        addStatusMessage('Batch processed and zip downloaded', 'complete');
+                    } else {
+                        try {
+                            const error = JSON.parse(xhr.responseText).error;
+                            addStatusMessage(`Error: ${error}`, 'error');
+                        } catch {
+                            addStatusMessage('An error occurred during batch processing', 'error');
+                        }
+                    }
+                };
+
+                xhr.onerror = function() {
+                    batchProcessBtn.disabled = false;
+                    batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';
+                    addStatusMessage('An error occurred during batch processing', 'error');
+                };
+
+                xhr.responseType = 'blob';
+                xhr.send(formData);
             });
         });
     </script>
