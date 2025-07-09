@@ -1,9 +1,948 @@
+<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
+<!--&lt;!&ndash;<html lang="en">&ndash;&gt;-->
+<!--&lt;!&ndash;<head>&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta charset="UTF-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    <meta name="viewport" content="width=device-width, initial-scale=1.0">&ndash;&gt;-->
+<!--&lt;!&ndash;    <title>YOLO Dataset Visualizer | Modern</title>&ndash;&gt;-->
+<!--&lt;!&ndash;    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">&ndash;&gt;-->
+<!--&lt;!&ndash;    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">&ndash;&gt;-->
+<!--&lt;!&ndash;    <script src="https://cdn.tailwindcss.com"></script>&ndash;&gt;-->
+<!--&lt;!&ndash;    <script>&ndash;&gt;-->
+<!--&lt;!&ndash;        tailwind.config = {&ndash;&gt;-->
+<!--&lt;!&ndash;            darkMode: 'class',&ndash;&gt;-->
+<!--&lt;!&ndash;            theme: {&ndash;&gt;-->
+<!--&lt;!&ndash;                extend: {&ndash;&gt;-->
+<!--&lt;!&ndash;                    colors: {&ndash;&gt;-->
+<!--&lt;!&ndash;                        primary: {&ndash;&gt;-->
+<!--&lt;!&ndash;                            50: '#faf5ff',&ndash;&gt;-->
+<!--&lt;!&ndash;                            100: '#f3e8ff',&ndash;&gt;-->
+<!--&lt;!&ndash;                            200: '#e9d5ff',&ndash;&gt;-->
+<!--&lt;!&ndash;                            300: '#d8b4fe',&ndash;&gt;-->
+<!--&lt;!&ndash;                            400: '#c084fc',&ndash;&gt;-->
+<!--&lt;!&ndash;                            500: '#a855f7',&ndash;&gt;-->
+<!--&lt;!&ndash;                            600: '#9333ea',&ndash;&gt;-->
+<!--&lt;!&ndash;                            700: '#7e22ce',&ndash;&gt;-->
+<!--&lt;!&ndash;                            800: '#6b21a8',&ndash;&gt;-->
+<!--&lt;!&ndash;                            900: '#581c87',&ndash;&gt;-->
+<!--&lt;!&ndash;                        },&ndash;&gt;-->
+<!--&lt;!&ndash;                        light: {&ndash;&gt;-->
+<!--&lt;!&ndash;                            50: '#f8fafc',&ndash;&gt;-->
+<!--&lt;!&ndash;                            100: '#f1f5f9',&ndash;&gt;-->
+<!--&lt;!&ndash;                            200: '#e2e8f0',&ndash;&gt;-->
+<!--&lt;!&ndash;                            300: '#cbd5e1',&ndash;&gt;-->
+<!--&lt;!&ndash;                            400: '#94a3b8',&ndash;&gt;-->
+<!--&lt;!&ndash;                            500: '#64748b',&ndash;&gt;-->
+<!--&lt;!&ndash;                        }&ndash;&gt;-->
+<!--&lt;!&ndash;                    },&ndash;&gt;-->
+<!--&lt;!&ndash;                    animation: {&ndash;&gt;-->
+<!--&lt;!&ndash;                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',&ndash;&gt;-->
+<!--&lt;!&ndash;                        'float': 'float 6s ease-in-out infinite',&ndash;&gt;-->
+<!--&lt;!&ndash;                    },&ndash;&gt;-->
+<!--&lt;!&ndash;                    keyframes: {&ndash;&gt;-->
+<!--&lt;!&ndash;                        float: {&ndash;&gt;-->
+<!--&lt;!&ndash;                            '0%, 100%': { transform: 'translateY(0)' },&ndash;&gt;-->
+<!--&lt;!&ndash;                            '50%': { transform: 'translateY(-10px)' },&ndash;&gt;-->
+<!--&lt;!&ndash;                        }&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    </script>&ndash;&gt;-->
+<!--&lt;!&ndash;    <style>&ndash;&gt;-->
+<!--&lt;!&ndash;        * {&ndash;&gt;-->
+<!--&lt;!&ndash;            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        body {&ndash;&gt;-->
+<!--&lt;!&ndash;            font-family: 'Inter', sans-serif;&ndash;&gt;-->
+<!--&lt;!&ndash;            background-color: #f8fafc;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #1e293b;&ndash;&gt;-->
+<!--&lt;!&ndash;            min-height: 100vh;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        body.dark {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #e2e8f0;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .glass-panel {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(255, 255, 255, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;            backdrop-filter: blur(12px);&ndash;&gt;-->
+<!--&lt;!&ndash;            -webkit-backdrop-filter: blur(12px);&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 1px solid rgba(203, 213, 225, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 16px;&ndash;&gt;-->
+<!--&lt;!&ndash;            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .glass-panel {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(30, 41, 59, 0.7);&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 1px solid rgba(255, 255, 255, 0.08);&ndash;&gt;-->
+<!--&lt;!&ndash;            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .file-card {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(255, 255, 255, 0.6);&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 1px dashed rgba(148, 163, 184, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .file-card {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(15, 23, 42, 0.6);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .tab-active {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(168, 85, 247, 0.15);&ndash;&gt;-->
+<!--&lt;!&ndash;            border-color: #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .tab-active {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(168, 85, 247, 0.15);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .progress-bar {&ndash;&gt;-->
+<!--&lt;!&ndash;            height: 10px;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(203, 213, 225, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .progress-bar {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(255, 255, 255, 0.1);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .progress-fill {&ndash;&gt;-->
+<!--&lt;!&ndash;            height: 100%;&ndash;&gt;-->
+<!--&lt;!&ndash;            border-radius: 5px;&ndash;&gt;-->
+<!--&lt;!&ndash;            background: linear-gradient(90deg, #a855f7, #c084fc);&ndash;&gt;-->
+<!--&lt;!&ndash;            transition: width 0.5s ease;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .drop-area {&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 2px dashed rgba(148, 163, 184, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .drop-area {&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 2px dashed rgba(148, 163, 184, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .drop-area.active {&ndash;&gt;-->
+<!--&lt;!&ndash;            border-color: #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(168, 85, 247, 0.05);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .status-processing {&ndash;&gt;-->
+<!--&lt;!&ndash;            border-left: 4px solid #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .status-complete {&ndash;&gt;-->
+<!--&lt;!&ndash;            border-left: 4px solid #10b981;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .status-error {&ndash;&gt;-->
+<!--&lt;!&ndash;            border-left: 4px solid #ef4444;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .floating {&ndash;&gt;-->
+<!--&lt;!&ndash;            animation: float 6s ease-in-out infinite;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .btn-primary {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);&ndash;&gt;-->
+<!--&lt;!&ndash;            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);&ndash;&gt;-->
+<!--&lt;!&ndash;            color: white;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .btn-primary:hover {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);&ndash;&gt;-->
+<!--&lt;!&ndash;            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;            transform: translateY(-2px);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .btn-secondary {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(255, 255, 255, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;            border: 1px solid rgba(203, 213, 225, 0.3);&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #475569;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .btn-secondary {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(30, 41, 59, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #e2e8f0;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .btn-secondary:hover {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(168, 85, 247, 0.1);&ndash;&gt;-->
+<!--&lt;!&ndash;            border-color: #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;            color: #a855f7;&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .file-item {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(241, 245, 249, 0.6);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .file-item {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(15, 23, 42, 0.6);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .theme-toggle {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(241, 245, 249, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+
+<!--&lt;!&ndash;        .dark .theme-toggle {&ndash;&gt;-->
+<!--&lt;!&ndash;            background: rgba(30, 41, 59, 0.8);&ndash;&gt;-->
+<!--&lt;!&ndash;        }&ndash;&gt;-->
+<!--&lt;!&ndash;    </style>&ndash;&gt;-->
+<!--&lt;!&ndash;</head>&ndash;&gt;-->
+<!--&lt;!&ndash;<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">&ndash;&gt;-->
+<!--&lt;!&ndash;    &lt;!&ndash; Theme Toggle &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;    <div class="fixed top-4 right-4 z-10">&ndash;&gt;-->
+<!--&lt;!&ndash;        <button id="theme-toggle" class="theme-toggle p-2 rounded-full shadow-md">&ndash;&gt;-->
+<!--&lt;!&ndash;            <i id="theme-icon" class="fas fa-moon text-purple-600"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;        </button>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <div class="max-w-4xl mx-auto">&ndash;&gt;-->
+<!--&lt;!&ndash;        &lt;!&ndash; Header &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <header class="mb-10 text-center">&ndash;&gt;-->
+<!--&lt;!&ndash;            <div class="flex justify-center mb-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center floating">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <i class="fas fa-eye text-white text-2xl"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">YOLO Dataset Visualizer</h1>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Visualize your YOLO datasets with bounding boxes and class labels in seconds</p>&ndash;&gt;-->
+<!--&lt;!&ndash;        </header>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        &lt;!&ndash; Main Card &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <div class="glass-panel p-6 sm:p-8">&ndash;&gt;-->
+<!--&lt;!&ndash;            <form id="visualizer-form">&ndash;&gt;-->
+<!--&lt;!&ndash;                &lt;!&ndash; Hidden field to track processing mode &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                <input type="hidden" id="processing_mode" name="processing_mode" value="single">&ndash;&gt;-->
+
+<!--&lt;!&ndash;                &lt;!&ndash; Class Names Section &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="mb-8">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-tags mr-2 text-purple-500"></i> Class Configuration&ndash;&gt;-->
+<!--&lt;!&ndash;                    </h2>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label for="class_names" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                Class Names (one per line)&ndash;&gt;-->
+<!--&lt;!&ndash;                            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <textarea&ndash;&gt;-->
+<!--&lt;!&ndash;                                id="class_names"&ndash;&gt;-->
+<!--&lt;!&ndash;                                name="class_names"&ndash;&gt;-->
+<!--&lt;!&ndash;                                rows="5"&ndash;&gt;-->
+<!--&lt;!&ndash;                                class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200"&ndash;&gt;-->
+<!--&lt;!&ndash;                                placeholder="person&#10;car&#10;bicycle"></textarea>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label for="classes_file" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                Or upload classes.txt&ndash;&gt;-->
+<!--&lt;!&ndash;                            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="relative">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                    type="file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    id="classes_file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    name="classes_file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    accept=".txt"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                &lt;!&ndash; Visualization Settings &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="mb-8">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-sliders-h mr-2 text-purple-500"></i> Visualization Settings&ndash;&gt;-->
+<!--&lt;!&ndash;                    </h2>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label for="max_size" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                Max Image Size&ndash;&gt;-->
+<!--&lt;!&ndash;                            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="relative">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                    type="number"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    id="max_size"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    name="max_size"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    value="1000"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="fas fa-expand-arrows-alt absolute left-3 top-3.5 text-slate-500"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p class="text-xs text-slate-500 mt-1">Maximum dimension for processed images</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <label for="conf_threshold" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                Confidence Threshold&ndash;&gt;-->
+<!--&lt;!&ndash;                            </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="relative">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                    type="number"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    step="0.01"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    id="conf_threshold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    name="conf_threshold"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    value="0.25"&ndash;&gt;-->
+<!--&lt;!&ndash;                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="fas fa-percent absolute left-3 top-3.5 text-slate-500"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p class="text-xs text-slate-500 mt-1">Minimum confidence to display bounding box</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                &lt;!&ndash; Tabs &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="mb-8">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="flex space-x-1 mb-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div&ndash;&gt;-->
+<!--&lt;!&ndash;                            class="tab tab-active px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-700 dark:text-slate-300 font-medium"&ndash;&gt;-->
+<!--&lt;!&ndash;                            data-tab="single">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-image mr-2"></i> Single Image&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div&ndash;&gt;-->
+<!--&lt;!&ndash;                            class="tab px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-medium"&ndash;&gt;-->
+<!--&lt;!&ndash;                            data-tab="batch">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-layer-group mr-2"></i> Batch Processing&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    &lt;!&ndash; Single Image Tab &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div id="single-tab" class="tab-content">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <label for="image" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    Image File&ndash;&gt;-->
+<!--&lt;!&ndash;                                </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="relative">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                        type="file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        id="image"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        name="image"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        accept="image/*"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="image-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div id="image-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                            <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <label for="label" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    Label File&ndash;&gt;-->
+<!--&lt;!&ndash;                                </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div class="relative">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                        type="file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        id="label"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        name="label"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        accept=".txt"&ndash;&gt;-->
+<!--&lt;!&ndash;                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="label-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div id="label-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <div class="mt-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <button type="button" id="process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="fas fa-magic mr-2"></i> Visualize Image&ndash;&gt;-->
+<!--&lt;!&ndash;                            </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    &lt;!&ndash; Batch Processing Tab &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div id="batch-tab" class="tab-content hidden">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="mb-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        Image Files&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="drop-area-images" class="drop-area relative p-6 rounded-lg transition-colors">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                            type="file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            id="batch_images"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            name="batch_images"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            multiple&ndash;&gt;-->
+<!--&lt;!&ndash;                                            accept=".jpg,.jpeg,.png,.bmp,.webp"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <div class="text-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop image files here</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="image-file-list" class="mt-4 max-h-40 overflow-y-auto">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <div class="text-center py-4 text-slate-500">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <i class="fas fa-folder-open mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p>No files selected</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                                <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        Label Files&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </label>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="drop-area-labels" class="drop-area relative p-6 rounded-lg transition-colors">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <input&ndash;&gt;-->
+<!--&lt;!&ndash;                                            type="file"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            id="batch_labels"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            name="batch_labels"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            multiple&ndash;&gt;-->
+<!--&lt;!&ndash;                                            accept=".txt"&ndash;&gt;-->
+<!--&lt;!&ndash;                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <div class="text-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop label files here</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <div id="label-file-list" class="mt-4 max-h-40 overflow-y-auto">&ndash;&gt;-->
+<!--&lt;!&ndash;                                        <div class="text-center py-4 text-slate-500">&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <i class="fas fa-folder-open mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                                            <p>No files selected</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <div class="text-sm text-slate-600 dark:text-slate-400 mb-6 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-info-circle text-purple-500 mr-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                            Files will be matched by their base names (e.g., image1.jpg and image1.txt). Only files with matching names will be processed.&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        <div>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <button type="button" id="batch-process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">&ndash;&gt;-->
+<!--&lt;!&ndash;                                <i class="fas fa-bolt mr-2"></i> Visualize Batch&ndash;&gt;-->
+<!--&lt;!&ndash;                            </button>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                &lt;!&ndash; Progress and Status &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;                <div class="mt-8">&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="progress-container hidden mb-4">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-2">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span>Processing</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <span id="progress-text">0%</span>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="progress-bar">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    <div id="status-container" class="hidden">&ndash;&gt;-->
+<!--&lt;!&ndash;                        <h3 class="text-lg font-medium text-slate-800 dark:text-slate-300 mb-3 flex items-center">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-history mr-2 text-purple-500"></i> Processing Status&ndash;&gt;-->
+<!--&lt;!&ndash;                        </h3>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div id="status-messages" class="space-y-3 max-h-60 overflow-y-auto p-2"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                </div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </form>&ndash;&gt;-->
+<!--&lt;!&ndash;        </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;        &lt;!&ndash; Footer &ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;        <footer class="mt-12 text-center text-slate-500 text-sm">&ndash;&gt;-->
+<!--&lt;!&ndash;            <p>YOLO Dataset Visualizer v2.0 | Modern Edition</p>&ndash;&gt;-->
+<!--&lt;!&ndash;            <p class="mt-2">Powered by Flask & Tailwind CSS</p>&ndash;&gt;-->
+<!--&lt;!&ndash;        </footer>&ndash;&gt;-->
+<!--&lt;!&ndash;    </div>&ndash;&gt;-->
+
+<!--&lt;!&ndash;    <script>&ndash;&gt;-->
+<!--&lt;!&ndash;        document.addEventListener('DOMContentLoaded', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;            // Theme toggle functionality&ndash;&gt;-->
+<!--&lt;!&ndash;            const themeToggle = document.getElementById('theme-toggle');&ndash;&gt;-->
+<!--&lt;!&ndash;            const themeIcon = document.getElementById('theme-icon');&ndash;&gt;-->
+<!--&lt;!&ndash;            const body = document.body;&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Check for saved theme preference or respect OS setting&ndash;&gt;-->
+<!--&lt;!&ndash;            const savedTheme = localStorage.getItem('theme');&ndash;&gt;-->
+<!--&lt;!&ndash;            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {&ndash;&gt;-->
+<!--&lt;!&ndash;                body.classList.add('dark');&ndash;&gt;-->
+<!--&lt;!&ndash;                themeIcon.classList.remove('fa-moon');&ndash;&gt;-->
+<!--&lt;!&ndash;                themeIcon.classList.add('fa-sun');&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+
+<!--&lt;!&ndash;            themeToggle.addEventListener('click', () => {&ndash;&gt;-->
+<!--&lt;!&ndash;                body.classList.toggle('dark');&ndash;&gt;-->
+<!--&lt;!&ndash;                const isDarkMode = body.classList.contains('dark');&ndash;&gt;-->
+<!--&lt;!&ndash;                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                if (isDarkMode) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    themeIcon.classList.remove('fa-moon');&ndash;&gt;-->
+<!--&lt;!&ndash;                    themeIcon.classList.add('fa-sun');&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    themeIcon.classList.remove('fa-sun');&ndash;&gt;-->
+<!--&lt;!&ndash;                    themeIcon.classList.add('fa-moon');&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // DOM elements&ndash;&gt;-->
+<!--&lt;!&ndash;            const tabs = document.querySelectorAll('.tab');&ndash;&gt;-->
+<!--&lt;!&ndash;            const tabContents = document.querySelectorAll('.tab-content');&ndash;&gt;-->
+<!--&lt;!&ndash;            const dropAreaImages = document.getElementById('drop-area-images');&ndash;&gt;-->
+<!--&lt;!&ndash;            const dropAreaLabels = document.getElementById('drop-area-labels');&ndash;&gt;-->
+<!--&lt;!&ndash;            const imagesInput = document.getElementById('batch_images');&ndash;&gt;-->
+<!--&lt;!&ndash;            const labelsInput = document.getElementById('batch_labels');&ndash;&gt;-->
+<!--&lt;!&ndash;            const imageFileList = document.getElementById('image-file-list');&ndash;&gt;-->
+<!--&lt;!&ndash;            const labelFileList = document.getElementById('label-file-list');&ndash;&gt;-->
+<!--&lt;!&ndash;            const progressContainer = document.querySelector('.progress-container');&ndash;&gt;-->
+<!--&lt;!&ndash;            const progressFill = document.getElementById('progress-fill');&ndash;&gt;-->
+<!--&lt;!&ndash;            const progressText = document.getElementById('progress-text');&ndash;&gt;-->
+<!--&lt;!&ndash;            const statusContainer = document.getElementById('status-container');&ndash;&gt;-->
+<!--&lt;!&ndash;            const statusMessages = document.getElementById('status-messages');&ndash;&gt;-->
+<!--&lt;!&ndash;            const singleProcessBtn = document.getElementById('process-btn');&ndash;&gt;-->
+<!--&lt;!&ndash;            const batchProcessBtn = document.getElementById('batch-process-btn');&ndash;&gt;-->
+<!--&lt;!&ndash;            const processingMode = document.getElementById('processing_mode');&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // File info elements for single image mode&ndash;&gt;-->
+<!--&lt;!&ndash;            const imageFileInfo = document.getElementById('image-file-info');&ndash;&gt;-->
+<!--&lt;!&ndash;            const labelFileInfo = document.getElementById('label-file-info');&ndash;&gt;-->
+<!--&lt;!&ndash;            const imageUploadArea = document.getElementById('image-upload-area');&ndash;&gt;-->
+<!--&lt;!&ndash;            const labelUploadArea = document.getElementById('label-upload-area');&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Tab switching&ndash;&gt;-->
+<!--&lt;!&ndash;            tabs.forEach(tab => {&ndash;&gt;-->
+<!--&lt;!&ndash;                tab.addEventListener('click', () => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    tabs.forEach(t => t.classList.remove('tab-active', 'border-purple-500', 'text-purple-500'));&ndash;&gt;-->
+<!--&lt;!&ndash;                    tab.classList.add('tab-active', 'border-purple-500', 'text-purple-500');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const tabName = tab.getAttribute('data-tab');&ndash;&gt;-->
+<!--&lt;!&ndash;                    tabContents.forEach(tc => tc.classList.add('hidden'));&ndash;&gt;-->
+<!--&lt;!&ndash;                    document.getElementById(`${tabName}-tab`).classList.remove('hidden');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    // Update processing mode&ndash;&gt;-->
+<!--&lt;!&ndash;                    processingMode.value = tabName;&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Setup drag and drop for images&ndash;&gt;-->
+<!--&lt;!&ndash;            setupDragDrop(dropAreaImages, imagesInput, imageFileList);&ndash;&gt;-->
+<!--&lt;!&ndash;            setupDragDrop(dropAreaLabels, labelsInput, labelFileList);&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Setup file selection for single image mode&ndash;&gt;-->
+<!--&lt;!&ndash;            document.getElementById('image').addEventListener('change', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                if (this.files.length > 0) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    const file = this.files[0];&ndash;&gt;-->
+<!--&lt;!&ndash;                    imageFileInfo.innerHTML = `<i class="fas fa-file-image mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;&ndash;&gt;-->
+<!--&lt;!&ndash;                    imageUploadArea.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-file-image text-3xl text-purple-500 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    imageFileInfo.innerHTML = '';&ndash;&gt;-->
+<!--&lt;!&ndash;                    imageUploadArea.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+
+<!--&lt;!&ndash;            document.getElementById('label').addEventListener('change', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                if (this.files.length > 0) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    const file = this.files[0];&ndash;&gt;-->
+<!--&lt;!&ndash;                    labelFileInfo.innerHTML = `<i class="fas fa-file-alt mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;&ndash;&gt;-->
+<!--&lt;!&ndash;                    labelUploadArea.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-file-alt text-3xl text-purple-500 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    labelFileInfo.innerHTML = '';&ndash;&gt;-->
+<!--&lt;!&ndash;                    labelUploadArea.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+
+<!--&lt;!&ndash;            function setupDragDrop(dropArea, input, fileListElement) {&ndash;&gt;-->
+<!--&lt;!&ndash;                // File drag and drop&ndash;&gt;-->
+<!--&lt;!&ndash;                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    dropArea.addEventListener(eventName, preventDefaults, false);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+
+<!--&lt;!&ndash;                function preventDefaults(e) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    e.preventDefault();&ndash;&gt;-->
+<!--&lt;!&ndash;                    e.stopPropagation();&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                ['dragenter', 'dragover'].forEach(eventName => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    dropArea.addEventListener(eventName, highlight, false);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+
+<!--&lt;!&ndash;                ['dragleave', 'drop'].forEach(eventName => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    dropArea.addEventListener(eventName, unhighlight, false);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+
+<!--&lt;!&ndash;                function highlight() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    dropArea.classList.add('active');&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                function unhighlight() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    dropArea.classList.remove('active');&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                dropArea.addEventListener('drop', handleDrop, false);&ndash;&gt;-->
+<!--&lt;!&ndash;                dropArea.addEventListener('click', () => input.click());&ndash;&gt;-->
+
+<!--&lt;!&ndash;                input.addEventListener('change', handleFiles);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                function handleDrop(e) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    const dt = e.dataTransfer;&ndash;&gt;-->
+<!--&lt;!&ndash;                    if (dt.files.length) {&ndash;&gt;-->
+<!--&lt;!&ndash;                        input.files = dt.files;&ndash;&gt;-->
+<!--&lt;!&ndash;                        handleFiles();&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                function handleFiles() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    renderFileList(Array.from(input.files), fileListElement);&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+
+<!--&lt;!&ndash;            function renderFileList(files, container) {&ndash;&gt;-->
+<!--&lt;!&ndash;                container.innerHTML = '';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                if (files.length === 0) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    container.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                        <div class="text-center py-4 text-slate-500">&ndash;&gt;-->
+<!--&lt;!&ndash;                            <i class="fas fa-folder-open mb-2"></i>&ndash;&gt;-->
+<!--&lt;!&ndash;                            <p>No files selected</p>&ndash;&gt;-->
+<!--&lt;!&ndash;                        </div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    `;&ndash;&gt;-->
+<!--&lt;!&ndash;                    return;&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                files.forEach((file, index) => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    const fileItem = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileItem.className = 'flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-800 rounded-lg mb-2';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const fileInfo = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileInfo.className = 'flex items-center';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const fileIcon = document.createElement('i');&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileIcon.className = file.type.includes('image') ?&ndash;&gt;-->
+<!--&lt;!&ndash;                        'fas fa-file-image text-purple-500 mr-3' : 'fas fa-file-alt text-purple-500 mr-3';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const fileDetails = document.createElement('div');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const fileName = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileName.className = 'text-slate-700 dark:text-slate-300 text-sm truncate max-w-[180px]';&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileName.textContent = file.name;&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const fileSize = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileSize.className = 'text-slate-500 text-xs';&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileSize.textContent = formatFileSize(file.size);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    fileDetails.appendChild(fileName);&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileDetails.appendChild(fileSize);&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileInfo.appendChild(fileIcon);&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileInfo.appendChild(fileDetails);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    const removeBtn = document.createElement('button');&ndash;&gt;-->
+<!--&lt;!&ndash;                    removeBtn.className = 'text-slate-500 hover:text-rose-500';&ndash;&gt;-->
+<!--&lt;!&ndash;                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';&ndash;&gt;-->
+<!--&lt;!&ndash;                    removeBtn.onclick = () => {&ndash;&gt;-->
+<!--&lt;!&ndash;                        const dataTransfer = new DataTransfer();&ndash;&gt;-->
+<!--&lt;!&ndash;                        const input = container.id === 'image-file-list' ? imagesInput : labelsInput;&ndash;&gt;-->
+<!--&lt;!&ndash;                        const currentFiles = Array.from(input.files);&ndash;&gt;-->
+<!--&lt;!&ndash;                        currentFiles.splice(index, 1);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        currentFiles.forEach(f => dataTransfer.items.add(f));&ndash;&gt;-->
+<!--&lt;!&ndash;                        input.files = dataTransfer.files;&ndash;&gt;-->
+<!--&lt;!&ndash;                        renderFileList(currentFiles, container);&ndash;&gt;-->
+<!--&lt;!&ndash;                    };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    fileItem.appendChild(fileInfo);&ndash;&gt;-->
+<!--&lt;!&ndash;                    fileItem.appendChild(removeBtn);&ndash;&gt;-->
+<!--&lt;!&ndash;                    container.appendChild(fileItem);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+
+<!--&lt;!&ndash;            function formatFileSize(bytes) {&ndash;&gt;-->
+<!--&lt;!&ndash;                if (bytes === 0) return '0 Bytes';&ndash;&gt;-->
+<!--&lt;!&ndash;                const k = 1024;&ndash;&gt;-->
+<!--&lt;!&ndash;                const sizes = ['Bytes', 'KB', 'MB', 'GB'];&ndash;&gt;-->
+<!--&lt;!&ndash;                const i = Math.floor(Math.log(bytes) / Math.log(k));&ndash;&gt;-->
+<!--&lt;!&ndash;                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+
+<!--&lt;!&ndash;            function addStatusMessage(message, type) {&ndash;&gt;-->
+<!--&lt;!&ndash;                const messageDiv = document.createElement('div');&ndash;&gt;-->
+<!--&lt;!&ndash;                messageDiv.className = `status-item p-3 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-start ${&ndash;&gt;-->
+<!--&lt;!&ndash;                    type === 'processing' ? 'status-processing' :&ndash;&gt;-->
+<!--&lt;!&ndash;                    type === 'complete' ? 'status-complete' :&ndash;&gt;-->
+<!--&lt;!&ndash;                    'status-error'&ndash;&gt;-->
+<!--&lt;!&ndash;                }`;&ndash;&gt;-->
+
+<!--&lt;!&ndash;                let icon = '';&ndash;&gt;-->
+<!--&lt;!&ndash;                let iconClass = '';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                if (type === 'processing') {&ndash;&gt;-->
+<!--&lt;!&ndash;                    icon = '<i class="fas fa-sync-alt animate-spin"></i>';&ndash;&gt;-->
+<!--&lt;!&ndash;                    iconClass = 'text-purple-500';&ndash;&gt;-->
+<!--&lt;!&ndash;                } else if (type === 'complete') {&ndash;&gt;-->
+<!--&lt;!&ndash;                    icon = '<i class="fas fa-check-circle"></i>';&ndash;&gt;-->
+<!--&lt;!&ndash;                    iconClass = 'text-emerald-500';&ndash;&gt;-->
+<!--&lt;!&ndash;                } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                    icon = '<i class="fas fa-exclamation-circle"></i>';&ndash;&gt;-->
+<!--&lt;!&ndash;                    iconClass = 'text-rose-500';&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                messageDiv.innerHTML = `&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="mr-3 text-lg ${iconClass}">${icon}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                    <div class="text-slate-700 dark:text-slate-300">${message}</div>&ndash;&gt;-->
+<!--&lt;!&ndash;                `;&ndash;&gt;-->
+
+<!--&lt;!&ndash;                statusMessages.appendChild(messageDiv);&ndash;&gt;-->
+<!--&lt;!&ndash;                statusContainer.scrollTop = statusContainer.scrollHeight;&ndash;&gt;-->
+<!--&lt;!&ndash;            }&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Single image processing&ndash;&gt;-->
+<!--&lt;!&ndash;            singleProcessBtn.addEventListener('click', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                // Show progress&ndash;&gt;-->
+<!--&lt;!&ndash;                progressContainer.classList.remove('hidden');&ndash;&gt;-->
+<!--&lt;!&ndash;                progressFill.style.width = '0%';&ndash;&gt;-->
+<!--&lt;!&ndash;                progressText.textContent = '0%';&ndash;&gt;-->
+<!--&lt;!&ndash;                statusContainer.classList.remove('hidden');&ndash;&gt;-->
+<!--&lt;!&ndash;                statusMessages.innerHTML = '';&ndash;&gt;-->
+<!--&lt;!&ndash;                singleProcessBtn.disabled = true;&ndash;&gt;-->
+<!--&lt;!&ndash;                singleProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Create FormData&ndash;&gt;-->
+<!--&lt;!&ndash;                const formData = new FormData();&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add parameters&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('processing_mode', 'single');&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('max_size', document.getElementById('max_size').value);&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('conf_threshold', document.getElementById('conf_threshold').value);&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('class_names', document.getElementById('class_names').value);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add classes file if uploaded&ndash;&gt;-->
+<!--&lt;!&ndash;                const classesFile = document.getElementById('classes_file').files[0];&ndash;&gt;-->
+<!--&lt;!&ndash;                if (classesFile) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    formData.append('classes_file', classesFile);&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add image and label&ndash;&gt;-->
+<!--&lt;!&ndash;                const imageInput = document.getElementById('image');&ndash;&gt;-->
+<!--&lt;!&ndash;                const labelInput = document.getElementById('label');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                if (!imageInput.files[0]) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    addStatusMessage('Please select an image file', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                    singleProcessBtn.disabled = false;&ndash;&gt;-->
+<!--&lt;!&ndash;                    singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';&ndash;&gt;-->
+<!--&lt;!&ndash;                    return;&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                formData.append('image', imageInput.files[0]);&ndash;&gt;-->
+<!--&lt;!&ndash;                if (labelInput.files[0]) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    formData.append('label', labelInput.files[0]);&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Submit via AJAX&ndash;&gt;-->
+<!--&lt;!&ndash;                const xhr = new XMLHttpRequest();&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.open('POST', '/process', true);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Show upload progress&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.upload.onprogress = function(event) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    if (event.lengthComputable) {&ndash;&gt;-->
+<!--&lt;!&ndash;                        const percent = Math.round((event.loaded / event.total) * 100);&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressFill.style.width = percent + '%';&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressText.textContent = percent + '%';&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                xhr.onload = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    progressFill.style.width = '100%';&ndash;&gt;-->
+<!--&lt;!&ndash;                    progressText.textContent = '100%';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    setTimeout(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;                        singleProcessBtn.disabled = false;&ndash;&gt;-->
+<!--&lt;!&ndash;                        singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';&ndash;&gt;-->
+<!--&lt;!&ndash;                    }, 1000);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    if (xhr.status === 200) {&ndash;&gt;-->
+<!--&lt;!&ndash;                        // Create download link&ndash;&gt;-->
+<!--&lt;!&ndash;                        const blob = new Blob([xhr.response], {type: 'image/jpeg'});&ndash;&gt;-->
+<!--&lt;!&ndash;                        const url = URL.createObjectURL(blob);&ndash;&gt;-->
+<!--&lt;!&ndash;                        const a = document.createElement('a');&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.href = url;&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.download = 'visualized_' + document.getElementById('image').files[0].name;&ndash;&gt;-->
+<!--&lt;!&ndash;                        document.body.appendChild(a);&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.click();&ndash;&gt;-->
+<!--&lt;!&ndash;                        setTimeout(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;                            document.body.removeChild(a);&ndash;&gt;-->
+<!--&lt;!&ndash;                            URL.revokeObjectURL(url);&ndash;&gt;-->
+<!--&lt;!&ndash;                        }, 100);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        // Add status message&ndash;&gt;-->
+<!--&lt;!&ndash;                        addStatusMessage('Image processed and downloaded', 'complete');&ndash;&gt;-->
+<!--&lt;!&ndash;                    } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                        try {&ndash;&gt;-->
+<!--&lt;!&ndash;                            const error = JSON.parse(xhr.responseText).error;&ndash;&gt;-->
+<!--&lt;!&ndash;                            addStatusMessage(`Error: ${error}`, 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                        } catch {&ndash;&gt;-->
+<!--&lt;!&ndash;                            addStatusMessage('An error occurred during processing', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                        }&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                xhr.onerror = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    singleProcessBtn.disabled = false;&ndash;&gt;-->
+<!--&lt;!&ndash;                    singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';&ndash;&gt;-->
+<!--&lt;!&ndash;                    addStatusMessage('An error occurred during processing', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                xhr.responseType = 'blob';&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.send(formData);&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+
+<!--&lt;!&ndash;            // Batch processing&ndash;&gt;-->
+<!--&lt;!&ndash;            batchProcessBtn.addEventListener('click', function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                // Get files from the inputs&ndash;&gt;-->
+<!--&lt;!&ndash;                const imageFiles = Array.from(imagesInput.files);&ndash;&gt;-->
+<!--&lt;!&ndash;                const labelFiles = Array.from(labelsInput.files);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                if (imageFiles.length === 0 || labelFiles.length === 0) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    addStatusMessage('Please upload both images and labels', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                    return;&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Show progress&ndash;&gt;-->
+<!--&lt;!&ndash;                progressContainer.classList.remove('hidden');&ndash;&gt;-->
+<!--&lt;!&ndash;                progressFill.style.width = '0%';&ndash;&gt;-->
+<!--&lt;!&ndash;                progressText.textContent = '0%';&ndash;&gt;-->
+<!--&lt;!&ndash;                statusContainer.classList.remove('hidden');&ndash;&gt;-->
+<!--&lt;!&ndash;                statusMessages.innerHTML = '';&ndash;&gt;-->
+<!--&lt;!&ndash;                batchProcessBtn.disabled = true;&ndash;&gt;-->
+<!--&lt;!&ndash;                batchProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add initial status message&ndash;&gt;-->
+<!--&lt;!&ndash;                addStatusMessage('Starting batch processing...', 'processing');&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Create FormData&ndash;&gt;-->
+<!--&lt;!&ndash;                const formData = new FormData();&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add parameters&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('processing_mode', 'batch');&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('max_size', document.getElementById('max_size').value);&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('conf_threshold', document.getElementById('conf_threshold').value);&ndash;&gt;-->
+<!--&lt;!&ndash;                formData.append('class_names', document.getElementById('class_names').value);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add classes file if uploaded&ndash;&gt;-->
+<!--&lt;!&ndash;                const classesFile = document.getElementById('classes_file').files[0];&ndash;&gt;-->
+<!--&lt;!&ndash;                if (classesFile) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    formData.append('classes_file', classesFile);&ndash;&gt;-->
+<!--&lt;!&ndash;                }&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add images&ndash;&gt;-->
+<!--&lt;!&ndash;                imageFiles.forEach(file => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    formData.append('batch_images', file);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Add labels&ndash;&gt;-->
+<!--&lt;!&ndash;                labelFiles.forEach(file => {&ndash;&gt;-->
+<!--&lt;!&ndash;                    formData.append('batch_labels', file);&ndash;&gt;-->
+<!--&lt;!&ndash;                });&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Create XMLHttpRequest for processing&ndash;&gt;-->
+<!--&lt;!&ndash;                const xhr = new XMLHttpRequest();&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.open('POST', '/process', true);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Show upload progress&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.upload.onprogress = function(event) {&ndash;&gt;-->
+<!--&lt;!&ndash;                    if (event.lengthComputable) {&ndash;&gt;-->
+<!--&lt;!&ndash;                        const percent = Math.round((event.loaded / event.total) * 50); // First 50% for upload&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressFill.style.width = percent + '%';&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressText.textContent = percent + '%';&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                // Handle response&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.onload = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    // Simulate processing progress&ndash;&gt;-->
+<!--&lt;!&ndash;                    let progress = 50;&ndash;&gt;-->
+<!--&lt;!&ndash;                    const interval = setInterval(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;                        progress += 1;&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressFill.style.width = progress + '%';&ndash;&gt;-->
+<!--&lt;!&ndash;                        progressText.textContent = progress + '%';&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        if (progress >= 100) {&ndash;&gt;-->
+<!--&lt;!&ndash;                            clearInterval(interval);&ndash;&gt;-->
+<!--&lt;!&ndash;                            batchProcessBtn.disabled = false;&ndash;&gt;-->
+<!--&lt;!&ndash;                            batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';&ndash;&gt;-->
+<!--&lt;!&ndash;                        }&ndash;&gt;-->
+<!--&lt;!&ndash;                    }, 50);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                    if (xhr.status === 200) {&ndash;&gt;-->
+<!--&lt;!&ndash;                        // Create download link&ndash;&gt;-->
+<!--&lt;!&ndash;                        const blob = new Blob([xhr.response], {type: 'application/zip'});&ndash;&gt;-->
+<!--&lt;!&ndash;                        const url = URL.createObjectURL(blob);&ndash;&gt;-->
+<!--&lt;!&ndash;                        const a = document.createElement('a');&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.href = url;&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.download = 'visualized_images.zip';&ndash;&gt;-->
+<!--&lt;!&ndash;                        document.body.appendChild(a);&ndash;&gt;-->
+<!--&lt;!&ndash;                        a.click();&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        setTimeout(() => {&ndash;&gt;-->
+<!--&lt;!&ndash;                            document.body.removeChild(a);&ndash;&gt;-->
+<!--&lt;!&ndash;                            URL.revokeObjectURL(url);&ndash;&gt;-->
+<!--&lt;!&ndash;                        }, 100);&ndash;&gt;-->
+
+<!--&lt;!&ndash;                        addStatusMessage('Batch processed and zip downloaded', 'complete');&ndash;&gt;-->
+<!--&lt;!&ndash;                    } else {&ndash;&gt;-->
+<!--&lt;!&ndash;                        try {&ndash;&gt;-->
+<!--&lt;!&ndash;                            const error = JSON.parse(xhr.responseText).error;&ndash;&gt;-->
+<!--&lt;!&ndash;                            addStatusMessage(`Error: ${error}`, 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                        } catch {&ndash;&gt;-->
+<!--&lt;!&ndash;                            addStatusMessage('An error occurred during batch processing', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                        }&ndash;&gt;-->
+<!--&lt;!&ndash;                    }&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                xhr.onerror = function() {&ndash;&gt;-->
+<!--&lt;!&ndash;                    batchProcessBtn.disabled = false;&ndash;&gt;-->
+<!--&lt;!&ndash;                    batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';&ndash;&gt;-->
+<!--&lt;!&ndash;                    addStatusMessage('An error occurred during batch processing', 'error');&ndash;&gt;-->
+<!--&lt;!&ndash;                };&ndash;&gt;-->
+
+<!--&lt;!&ndash;                xhr.responseType = 'blob';&ndash;&gt;-->
+<!--&lt;!&ndash;                xhr.send(formData);&ndash;&gt;-->
+<!--&lt;!&ndash;            });&ndash;&gt;-->
+<!--&lt;!&ndash;        });&ndash;&gt;-->
+<!--&lt;!&ndash;    </script>&ndash;&gt;-->
+<!--&lt;!&ndash;</body>&ndash;&gt;-->
+<!--&lt;!&ndash;</html>&ndash;&gt;-->
+
+
 <!--<!DOCTYPE html>-->
 <!--<html lang="en">-->
 <!--<head>-->
 <!--    <meta charset="UTF-8">-->
 <!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>YOLO Dataset Visualizer | Modern</title>-->
+<!--    <title>YOLO Dataset Visualizer | Enhanced</title>-->
 <!--    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">-->
 <!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
 <!--    <script src="https://cdn.tailwindcss.com"></script>-->
@@ -189,6 +1128,29 @@
 <!--        .dark .theme-toggle {-->
 <!--            background: rgba(30, 41, 59, 0.8);-->
 <!--        }-->
+
+<!--        /* Mobile-specific styles */-->
+<!--        @media (max-width: 640px) {-->
+<!--            .mobile-column {-->
+<!--                flex-direction: column;-->
+<!--            }-->
+
+<!--            .mobile-full {-->
+<!--                width: 100% !important;-->
+<!--            }-->
+
+<!--            .mobile-mt {-->
+<!--                margin-top: 1rem;-->
+<!--            }-->
+
+<!--            .file-card {-->
+<!--                padding: 1.5rem;-->
+<!--            }-->
+
+<!--            .glass-panel {-->
+<!--                padding: 1.5rem;-->
+<!--            }-->
+<!--        }-->
 <!--    </style>-->
 <!--</head>-->
 <!--<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">-->
@@ -208,7 +1170,7 @@
 <!--                </div>-->
 <!--            </div>-->
 <!--            <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">YOLO Dataset Visualizer</h1>-->
-<!--            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Visualize your YOLO datasets with bounding boxes and class labels in seconds</p>-->
+<!--            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Visualize your YOLO datasets with bounding boxes and class labels</p>-->
 <!--        </header>-->
 
 <!--        &lt;!&ndash; Main Card &ndash;&gt;-->
@@ -247,12 +1209,13 @@
 <!--                                    name="classes_file"-->
 <!--                                    accept=".txt"-->
 <!--                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
-<!--                                <div class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
+<!--                                <div id="classes-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
 <!--                                    <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>-->
 <!--                                    <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>-->
 <!--                                    <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
 <!--                                </div>-->
 <!--                            </div>-->
+<!--                            <div id="classes-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
 <!--                        </div>-->
 <!--                    </div>-->
 <!--                </div>-->
@@ -301,14 +1264,14 @@
 
 <!--                &lt;!&ndash; Tabs &ndash;&gt;-->
 <!--                <div class="mb-8">-->
-<!--                    <div class="flex space-x-1 mb-6">-->
+<!--                    <div class="flex space-x-1 mb-6 mobile-column">-->
 <!--                        <div-->
-<!--                            class="tab tab-active px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-700 dark:text-slate-300 font-medium"-->
+<!--                            class="tab tab-active px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-700 dark:text-slate-300 font-medium mobile-full"-->
 <!--                            data-tab="single">-->
 <!--                            <i class="fas fa-image mr-2"></i> Single Image-->
 <!--                        </div>-->
 <!--                        <div-->
-<!--                            class="tab px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-medium"-->
+<!--                            class="tab px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-medium mobile-full mobile-mt"-->
 <!--                            data-tab="batch">-->
 <!--                            <i class="fas fa-layer-group mr-2"></i> Batch Processing-->
 <!--                        </div>-->
@@ -383,8 +1346,8 @@
 <!--                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
 <!--                                        <div class="text-center">-->
 <!--                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>-->
-<!--                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop image files here</p>-->
-<!--                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>-->
+<!--                                            <p class="text-slate-600 dark:text-slate-400">Click to upload image files</p>-->
+<!--                                            <p class="text-sm text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>-->
 <!--                                        </div>-->
 <!--                                    </div>-->
 <!--                                    <div id="image-file-list" class="mt-4 max-h-40 overflow-y-auto">-->
@@ -409,8 +1372,8 @@
 <!--                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
 <!--                                        <div class="text-center">-->
 <!--                                            <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>-->
-<!--                                            <p class="text-slate-600 dark:text-slate-400">Drag & drop label files here</p>-->
-<!--                                            <p class="text-sm text-slate-500 mt-1">or click to browse</p>-->
+<!--                                            <p class="text-slate-600 dark:text-slate-400">Click to upload label files</p>-->
+<!--                                            <p class="text-sm text-slate-500 mt-1">Supports .txt files</p>-->
 <!--                                        </div>-->
 <!--                                    </div>-->
 <!--                                    <div id="label-file-list" class="mt-4 max-h-40 overflow-y-auto">-->
@@ -460,8 +1423,8 @@
 
 <!--        &lt;!&ndash; Footer &ndash;&gt;-->
 <!--        <footer class="mt-12 text-center text-slate-500 text-sm">-->
-<!--            <p>YOLO Dataset Visualizer v2.0 | Modern Edition</p>-->
-<!--            <p class="mt-2">Powered by Flask & Tailwind CSS</p>-->
+<!--            <p>YOLO Dataset Visualizer v2.1 | Enhanced Edition</p>-->
+<!--            <p class="mt-2">Fully responsive with mobile support</p>-->
 <!--        </footer>-->
 <!--    </div>-->
 
@@ -512,11 +1475,13 @@
 <!--            const batchProcessBtn = document.getElementById('batch-process-btn');-->
 <!--            const processingMode = document.getElementById('processing_mode');-->
 
-<!--            // File info elements for single image mode-->
+<!--            // File info elements-->
 <!--            const imageFileInfo = document.getElementById('image-file-info');-->
 <!--            const labelFileInfo = document.getElementById('label-file-info');-->
+<!--            const classesFileInfo = document.getElementById('classes-file-info');-->
 <!--            const imageUploadArea = document.getElementById('image-upload-area');-->
 <!--            const labelUploadArea = document.getElementById('label-upload-area');-->
+<!--            const classesUploadArea = document.getElementById('classes-upload-area');-->
 
 <!--            // Tab switching-->
 <!--            tabs.forEach(tab => {-->
@@ -533,9 +1498,25 @@
 <!--                });-->
 <!--            });-->
 
-<!--            // Setup drag and drop for images-->
-<!--            setupDragDrop(dropAreaImages, imagesInput, imageFileList);-->
-<!--            setupDragDrop(dropAreaLabels, labelsInput, labelFileList);-->
+<!--            // Setup file uploads for classes file-->
+<!--            document.getElementById('classes_file').addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    classesFileInfo.innerHTML = `<i class="fas fa-file-text mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                    classesUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-text text-3xl text-purple-500 mb-2"></i>-->
+<!--                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    classesFileInfo.innerHTML = '';-->
+<!--                    classesUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>-->
+<!--                        <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                    `;-->
+<!--                }-->
+<!--            });-->
 
 <!--            // Setup file selection for single image mode-->
 <!--            document.getElementById('image').addEventListener('change', function() {-->
@@ -576,52 +1557,23 @@
 <!--                }-->
 <!--            });-->
 
-<!--            function setupDragDrop(dropArea, input, fileListElement) {-->
-<!--                // File drag and drop-->
-<!--                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {-->
-<!--                    dropArea.addEventListener(eventName, preventDefaults, false);-->
+<!--            // Setup batch file uploads-->
+<!--            setupFileUpload(imagesInput, imageFileList, 'image');-->
+<!--            setupFileUpload(labelsInput, labelFileList, 'text');-->
+
+<!--            function setupFileUpload(input, container, type) {-->
+<!--                input.addEventListener('change', function() {-->
+<!--                    renderFileList(Array.from(this.files), container, type);-->
 <!--                });-->
 
-<!--                function preventDefaults(e) {-->
-<!--                    e.preventDefault();-->
-<!--                    e.stopPropagation();-->
-<!--                }-->
-
-<!--                ['dragenter', 'dragover'].forEach(eventName => {-->
-<!--                    dropArea.addEventListener(eventName, highlight, false);-->
+<!--                // For mobile, directly trigger the input when clicking the drop area-->
+<!--                const dropArea = input.id === 'batch_images' ? dropAreaImages : dropAreaLabels;-->
+<!--                dropArea.addEventListener('click', () => {-->
+<!--                    input.click();-->
 <!--                });-->
-
-<!--                ['dragleave', 'drop'].forEach(eventName => {-->
-<!--                    dropArea.addEventListener(eventName, unhighlight, false);-->
-<!--                });-->
-
-<!--                function highlight() {-->
-<!--                    dropArea.classList.add('active');-->
-<!--                }-->
-
-<!--                function unhighlight() {-->
-<!--                    dropArea.classList.remove('active');-->
-<!--                }-->
-
-<!--                dropArea.addEventListener('drop', handleDrop, false);-->
-<!--                dropArea.addEventListener('click', () => input.click());-->
-
-<!--                input.addEventListener('change', handleFiles);-->
-
-<!--                function handleDrop(e) {-->
-<!--                    const dt = e.dataTransfer;-->
-<!--                    if (dt.files.length) {-->
-<!--                        input.files = dt.files;-->
-<!--                        handleFiles();-->
-<!--                    }-->
-<!--                }-->
-
-<!--                function handleFiles() {-->
-<!--                    renderFileList(Array.from(input.files), fileListElement);-->
-<!--                }-->
 <!--            }-->
 
-<!--            function renderFileList(files, container) {-->
+<!--            function renderFileList(files, container, type) {-->
 <!--                container.innerHTML = '';-->
 
 <!--                if (files.length === 0) {-->
@@ -642,7 +1594,7 @@
 <!--                    fileInfo.className = 'flex items-center';-->
 
 <!--                    const fileIcon = document.createElement('i');-->
-<!--                    fileIcon.className = file.type.includes('image') ?-->
+<!--                    fileIcon.className = type === 'image' ?-->
 <!--                        'fas fa-file-image text-purple-500 mr-3' : 'fas fa-file-alt text-purple-500 mr-3';-->
 
 <!--                    const fileDetails = document.createElement('div');-->
@@ -671,7 +1623,7 @@
 
 <!--                        currentFiles.forEach(f => dataTransfer.items.add(f));-->
 <!--                        input.files = dataTransfer.files;-->
-<!--                        renderFileList(currentFiles, container);-->
+<!--                        renderFileList(currentFiles, container, type);-->
 <!--                    };-->
 
 <!--                    fileItem.appendChild(fileInfo);-->
@@ -717,6 +1669,15 @@
 
 <!--                statusMessages.appendChild(messageDiv);-->
 <!--                statusContainer.scrollTop = statusContainer.scrollHeight;-->
+<!--            }-->
+
+<!--            function removeStatusMessage(messageText) {-->
+<!--                const messages = statusMessages.querySelectorAll('.status-item');-->
+<!--                messages.forEach(msg => {-->
+<!--                    if (msg.textContent.includes(messageText)) {-->
+<!--                        msg.remove();-->
+<!--                    }-->
+<!--                });-->
 <!--            }-->
 
 <!--            // Single image processing-->
@@ -840,7 +1801,8 @@
 <!--                batchProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';-->
 
 <!--                // Add initial status message-->
-<!--                addStatusMessage('Starting batch processing...', 'processing');-->
+<!--                const processingMessage = 'Starting batch processing...';-->
+<!--                addStatusMessage(processingMessage, 'processing');-->
 
 <!--                // Create FormData-->
 <!--                const formData = new FormData();-->
@@ -893,6 +1855,9 @@
 <!--                            clearInterval(interval);-->
 <!--                            batchProcessBtn.disabled = false;-->
 <!--                            batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';-->
+
+<!--                            // Remove the initial processing message-->
+<!--                            removeStatusMessage(processingMessage);-->
 <!--                        }-->
 <!--                    }, 50);-->
 
@@ -1130,7 +2095,7 @@
         }
 
         /* Mobile-specific styles */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .mobile-column {
                 flex-direction: column;
             }
@@ -1149,6 +2114,11 @@
 
             .glass-panel {
                 padding: 1.5rem;
+            }
+
+            .tab {
+                width: 100%;
+                text-align: center;
             }
         }
     </style>
@@ -1557,19 +2527,21 @@
                 }
             });
 
-            // Setup batch file uploads
+            // Setup batch file uploads with enhanced reliability
             setupFileUpload(imagesInput, imageFileList, 'image');
             setupFileUpload(labelsInput, labelFileList, 'text');
 
             function setupFileUpload(input, container, type) {
-                input.addEventListener('change', function() {
-                    renderFileList(Array.from(this.files), container, type);
-                });
-
-                // For mobile, directly trigger the input when clicking the drop area
+                // Mobile-friendly: Trigger input when drop area is clicked
                 const dropArea = input.id === 'batch_images' ? dropAreaImages : dropAreaLabels;
                 dropArea.addEventListener('click', () => {
                     input.click();
+                });
+
+                // Handle file selection
+                input.addEventListener('change', function() {
+                    const files = Array.from(this.files);
+                    renderFileList(files, container, type);
                 });
             }
 
@@ -1753,6 +2725,7 @@
                         a.download = 'visualized_' + document.getElementById('image').files[0].name;
                         document.body.appendChild(a);
                         a.click();
+
                         setTimeout(() => {
                             document.body.removeChild(a);
                             URL.revokeObjectURL(url);
