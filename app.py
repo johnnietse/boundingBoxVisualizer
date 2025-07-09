@@ -12,6 +12,13 @@ from werkzeug.utils import secure_filename
 from io import BytesIO
 
 app = Flask(__name__)
+
+from flask import send_from_directory
+
+@app.route("/my-favicon/<path:filename>")
+def serve_favicon(filename):
+    return send_from_directory("static/my-favicon", filename)
+
 app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024  # 100MB limit
 
 # Configure logging

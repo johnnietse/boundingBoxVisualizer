@@ -1,9 +1,1563 @@
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--    <title>YOLO Dataset Visualizer | Enhanced</title>-->
+<!--    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">-->
+<!--    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">-->
+<!--    <script src="https://cdn.tailwindcss.com"></script>-->
+<!--    <script>-->
+<!--        tailwind.config = {-->
+<!--            darkMode: 'class',-->
+<!--            theme: {-->
+<!--                extend: {-->
+<!--                    colors: {-->
+<!--                        primary: {-->
+<!--                            50: '#faf5ff',-->
+<!--                            100: '#f3e8ff',-->
+<!--                            200: '#e9d5ff',-->
+<!--                            300: '#d8b4fe',-->
+<!--                            400: '#c084fc',-->
+<!--                            500: '#a855f7',-->
+<!--                            600: '#9333ea',-->
+<!--                            700: '#7e22ce',-->
+<!--                            800: '#6b21a8',-->
+<!--                            900: '#581c87',-->
+<!--                        },-->
+<!--                        light: {-->
+<!--                            50: '#f8fafc',-->
+<!--                            100: '#f1f5f9',-->
+<!--                            200: '#e2e8f0',-->
+<!--                            300: '#cbd5e1',-->
+<!--                            400: '#94a3b8',-->
+<!--                            500: '#64748b',-->
+<!--                        }-->
+<!--                    },-->
+<!--                    animation: {-->
+<!--                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',-->
+<!--                        'float': 'float 6s ease-in-out infinite',-->
+<!--                    },-->
+<!--                    keyframes: {-->
+<!--                        float: {-->
+<!--                            '0%, 100%': { transform: 'translateY(0)' },-->
+<!--                            '50%': { transform: 'translateY(-10px)' },-->
+<!--                        }-->
+<!--                    }-->
+<!--                }-->
+<!--            }-->
+<!--        }-->
+<!--    </script>-->
+<!--    <style>-->
+<!--        * {-->
+<!--            transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;-->
+<!--        }-->
+
+<!--        body {-->
+<!--            font-family: 'Inter', sans-serif;-->
+<!--            background-color: #f8fafc;-->
+<!--            color: #1e293b;-->
+<!--            min-height: 100vh;-->
+<!--        }-->
+
+<!--        body.dark {-->
+<!--            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);-->
+<!--            color: #e2e8f0;-->
+<!--        }-->
+
+<!--        .glass-panel {-->
+<!--            background: rgba(255, 255, 255, 0.8);-->
+<!--            backdrop-filter: blur(12px);-->
+<!--            -webkit-backdrop-filter: blur(12px);-->
+<!--            border: 1px solid rgba(203, 213, 225, 0.3);-->
+<!--            border-radius: 16px;-->
+<!--            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);-->
+<!--        }-->
+
+<!--        .dark .glass-panel {-->
+<!--            background: rgba(30, 41, 59, 0.7);-->
+<!--            border: 1px solid rgba(255, 255, 255, 0.08);-->
+<!--            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);-->
+<!--        }-->
+
+<!--        .file-card {-->
+<!--            background: rgba(255, 255, 255, 0.6);-->
+<!--            border: 1px dashed rgba(148, 163, 184, 0.3);-->
+<!--        }-->
+
+<!--        .dark .file-card {-->
+<!--            background: rgba(15, 23, 42, 0.6);-->
+<!--        }-->
+
+<!--        .tab-active {-->
+<!--            background: rgba(168, 85, 247, 0.15);-->
+<!--            border-color: #a855f7;-->
+<!--            color: #a855f7;-->
+<!--        }-->
+
+<!--        .dark .tab-active {-->
+<!--            background: rgba(168, 85, 247, 0.15);-->
+<!--        }-->
+
+<!--        .progress-bar {-->
+<!--            height: 10px;-->
+<!--            border-radius: 5px;-->
+<!--            background: rgba(203, 213, 225, 0.3);-->
+<!--        }-->
+
+<!--        .dark .progress-bar {-->
+<!--            background: rgba(255, 255, 255, 0.1);-->
+<!--        }-->
+
+<!--        .progress-fill {-->
+<!--            height: 100%;-->
+<!--            border-radius: 5px;-->
+<!--            background: linear-gradient(90deg, #a855f7, #c084fc);-->
+<!--            transition: width 0.5s ease;-->
+<!--        }-->
+
+<!--        .drop-area {-->
+<!--            border: 2px dashed rgba(148, 163, 184, 0.3);-->
+<!--        }-->
+
+<!--        .dark .drop-area {-->
+<!--            border: 2px dashed rgba(148, 163, 184, 0.3);-->
+<!--        }-->
+
+<!--        .drop-area.active {-->
+<!--            border-color: #a855f7;-->
+<!--            background: rgba(168, 85, 247, 0.05);-->
+<!--        }-->
+
+<!--        .status-processing {-->
+<!--            border-left: 4px solid #a855f7;-->
+<!--        }-->
+
+<!--        .status-complete {-->
+<!--            border-left: 4px solid #10b981;-->
+<!--        }-->
+
+<!--        .status-error {-->
+<!--            border-left: 4px solid #ef4444;-->
+<!--        }-->
+
+<!--        .status-warning {-->
+<!--            border-left: 4px solid #f59e0b;-->
+<!--        }-->
+
+<!--        .floating {-->
+<!--            animation: float 6s ease-in-out infinite;-->
+<!--        }-->
+
+<!--        .btn-primary {-->
+<!--            background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);-->
+<!--            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.2);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .btn-primary:hover {-->
+<!--            background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%);-->
+<!--            box-shadow: 0 6px 20px rgba(168, 85, 247, 0.3);-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+
+<!--        .btn-secondary {-->
+<!--            background: rgba(255, 255, 255, 0.8);-->
+<!--            border: 1px solid rgba(203, 213, 225, 0.3);-->
+<!--            color: #475569;-->
+<!--        }-->
+
+<!--        .dark .btn-secondary {-->
+<!--            background: rgba(30, 41, 59, 0.8);-->
+<!--            color: #e2e8f0;-->
+<!--        }-->
+
+<!--        .btn-secondary:hover {-->
+<!--            background: rgba(168, 85, 247, 0.1);-->
+<!--            border-color: #a855f7;-->
+<!--            color: #a855f7;-->
+<!--        }-->
+
+<!--        .file-item {-->
+<!--            background: rgba(241, 245, 249, 0.6);-->
+<!--        }-->
+
+<!--        .dark .file-item {-->
+<!--            background: rgba(15, 23, 42, 0.6);-->
+<!--        }-->
+
+<!--        .theme-toggle {-->
+<!--            background: rgba(241, 245, 249, 0.8);-->
+<!--        }-->
+
+<!--        .dark .theme-toggle {-->
+<!--            background: rgba(30, 41, 59, 0.8);-->
+<!--        }-->
+
+<!--        /* Mobile-specific styles */-->
+<!--        @media (max-width: 768px) {-->
+<!--            .mobile-column {-->
+<!--                flex-direction: column;-->
+<!--            }-->
+
+<!--            .mobile-full {-->
+<!--                width: 100% !important;-->
+<!--            }-->
+
+<!--            .mobile-mt {-->
+<!--                margin-top: 1rem;-->
+<!--            }-->
+
+<!--            .file-card {-->
+<!--                padding: 1.5rem;-->
+<!--            }-->
+
+<!--            .glass-panel {-->
+<!--                padding: 1.5rem;-->
+<!--            }-->
+
+<!--            .tab {-->
+<!--                width: 100%;-->
+<!--                text-align: center;-->
+<!--            }-->
+<!--        }-->
+
+<!--        /* Modal styles */-->
+<!--        .modal-overlay {-->
+<!--            position: fixed;-->
+<!--            top: 0;-->
+<!--            left: 0;-->
+<!--            right: 0;-->
+<!--            bottom: 0;-->
+<!--            background: rgba(0, 0, 0, 0.5);-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            z-index: 1000;-->
+<!--        }-->
+
+<!--        .modal-content {-->
+<!--            background: white;-->
+<!--            border-radius: 12px;-->
+<!--            padding: 2rem;-->
+<!--            max-width: 90%;-->
+<!--            width: 500px;-->
+<!--            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);-->
+<!--        }-->
+
+<!--        .dark .modal-content {-->
+<!--            background: #1e293b;-->
+<!--        }-->
+
+<!--        .modal-title {-->
+<!--            font-size: 1.5rem;-->
+<!--            font-weight: 600;-->
+<!--            margin-bottom: 1rem;-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--        .modal-icon {-->
+<!--            margin-right: 0.75rem;-->
+<!--            font-size: 1.75rem;-->
+<!--        }-->
+
+<!--        .modal-buttons {-->
+<!--            display: flex;-->
+<!--            justify-content: flex-end;-->
+<!--            margin-top: 1.5rem;-->
+<!--            gap: 0.75rem;-->
+<!--        }-->
+
+<!--        .modal-button {-->
+<!--            padding: 0.5rem 1.25rem;-->
+<!--            border-radius: 8px;-->
+<!--            font-weight: 500;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.2s ease;-->
+<!--        }-->
+
+<!--        .modal-button-primary {-->
+<!--            background: linear-gradient(135deg, #a855f7 0%, #c084fc 100%);-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        .modal-button-secondary {-->
+<!--            background: #e2e8f0;-->
+<!--            color: #475569;-->
+<!--        }-->
+
+<!--        .dark .modal-button-secondary {-->
+<!--            background: #334155;-->
+<!--            color: #e2e8f0;-->
+<!--        }-->
+
+<!--        /* iOS-specific UI enhancements */-->
+<!--        .ios-toggle {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center;-->
+<!--            padding: 0.5rem 1rem;-->
+<!--            background: rgba(168, 85, 247, 0.1);-->
+<!--            border-radius: 9999px;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--            cursor: pointer;-->
+<!--            transition: all 0.3s ease;-->
+<!--        }-->
+
+<!--        .ios-toggle:hover {-->
+<!--            background: rgba(168, 85, 247, 0.2);-->
+<!--        }-->
+
+<!--        .ios-toggle span {-->
+<!--            margin-left: 0.5rem;-->
+<!--            font-weight: 500;-->
+<!--        }-->
+
+<!--        .ios-mode .batch-section {-->
+<!--            display: block !important;-->
+<!--        }-->
+
+<!--        .ios-mode .batch-section .mobile-hidden {-->
+<!--            display: none;-->
+<!--        }-->
+
+<!--        .ios-instructions {-->
+<!--            background: rgba(168, 85, 247, 0.05);-->
+<!--            border-left: 4px solid #a855f7;-->
+<!--            padding: 1rem;-->
+<!--            margin-bottom: 1.5rem;-->
+<!--            border-radius: 0 8px 8px 0;-->
+<!--        }-->
+
+<!--        .ios-instructions i {-->
+<!--            color: #a855f7;-->
+<!--            margin-right: 0.5rem;-->
+<!--        }-->
+
+<!--        .zip-fallback {-->
+<!--            margin-top: 1.5rem;-->
+<!--            padding: 1rem;-->
+<!--            background: rgba(168, 85, 247, 0.05);-->
+<!--            border-radius: 8px;-->
+<!--            border: 1px dashed rgba(168, 85, 247, 0.3);-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">-->
+<!--    &lt;!&ndash; Modal container &ndash;&gt;-->
+<!--    <div id="modal-container" class="modal-overlay hidden">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-title">-->
+<!--                <i id="modal-icon" class="modal-icon"></i>-->
+<!--                <span id="modal-title">Alert</span>-->
+<!--            </div>-->
+<!--            <p id="modal-message" class="text-slate-700 dark:text-slate-300"></p>-->
+<!--            <div class="modal-buttons">-->
+<!--                <button id="modal-confirm" class="modal-button modal-button-primary">OK</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Theme Toggle &ndash;&gt;-->
+<!--    <div class="fixed top-4 right-4 z-10">-->
+<!--        <button id="theme-toggle" class="theme-toggle p-2 rounded-full shadow-md">-->
+<!--            <i id="theme-icon" class="fas fa-moon text-purple-600"></i>-->
+<!--        </button>-->
+<!--    </div>-->
+
+<!--    <div class="max-w-4xl mx-auto">-->
+<!--        &lt;!&ndash; iOS Compatibility Toggle &ndash;&gt;-->
+<!--        <div class="ios-toggle" id="ios-toggle">-->
+<!--            <i class="fas fa-mobile-alt text-purple-600"></i>-->
+<!--            <span id="ios-toggle-text">Switch to iOS/Mobile Mode</span>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Header &ndash;&gt;-->
+<!--        <header class="mb-10 text-center">-->
+<!--            <div class="flex justify-center mb-4">-->
+<!--                <div class="w-16 h-16 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center floating">-->
+<!--                    <i class="fas fa-eye text-white text-2xl"></i>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <h1 class="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent mb-2">YOLO Dataset Visualizer</h1>-->
+<!--            <p class="text-slate-600 dark:text-slate-400 max-w-md mx-auto">Visualize your YOLO datasets with bounding boxes and class labels</p>-->
+<!--        </header>-->
+
+<!--        &lt;!&ndash; Main Card &ndash;&gt;-->
+<!--        <div class="glass-panel p-6 sm:p-8">-->
+<!--            <form id="visualizer-form">-->
+<!--                &lt;!&ndash; Hidden field to track processing mode &ndash;&gt;-->
+<!--                <input type="hidden" id="processing_mode" name="processing_mode" value="single">-->
+
+<!--                &lt;!&ndash; Class Names Section &ndash;&gt;-->
+<!--                <div class="mb-8">-->
+<!--                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">-->
+<!--                        <i class="fas fa-tags mr-2 text-purple-500"></i> Class Configuration-->
+<!--                    </h2>-->
+
+<!--                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+<!--                        <div>-->
+<!--                            <label for="class_names" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                Class Names (one per line)-->
+<!--                            </label>-->
+<!--                            <textarea-->
+<!--                                id="class_names"-->
+<!--                                name="class_names"-->
+<!--                                rows="5"-->
+<!--                                class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200"-->
+<!--                                placeholder="person&#10;car&#10;bicycle"></textarea>-->
+<!--                        </div>-->
+
+<!--                        <div>-->
+<!--                            <label for="classes_file" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                Or upload classes.txt-->
+<!--                            </label>-->
+<!--                            <div class="relative">-->
+<!--                                <input-->
+<!--                                    type="file"-->
+<!--                                    id="classes_file"-->
+<!--                                    name="classes_file"-->
+<!--                                    accept=".txt"-->
+<!--                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                <div id="classes-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
+<!--                                    <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>-->
+<!--                                    <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>-->
+<!--                                    <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div id="classes-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Visualization Settings &ndash;&gt;-->
+<!--                <div class="mb-8">-->
+<!--                    <h2 class="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-200 flex items-center">-->
+<!--                        <i class="fas fa-sliders-h mr-2 text-purple-500"></i> Visualization Settings-->
+<!--                    </h2>-->
+
+<!--                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+<!--                        <div>-->
+<!--                            <label for="max_size" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                Max Image Size-->
+<!--                            </label>-->
+<!--                            <div class="relative">-->
+<!--                                <input-->
+<!--                                    type="number"-->
+<!--                                    id="max_size"-->
+<!--                                    name="max_size"-->
+<!--                                    value="1000"-->
+<!--                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">-->
+<!--                                <i class="fas fa-expand-arrows-alt absolute left-3 top-3.5 text-slate-500"></i>-->
+<!--                            </div>-->
+<!--                            <p class="text-xs text-slate-500 mt-1">Maximum dimension for processed images</p>-->
+<!--                        </div>-->
+
+<!--                        <div>-->
+<!--                            <label for="conf_threshold" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                Confidence Threshold-->
+<!--                            </label>-->
+<!--                            <div class="relative">-->
+<!--                                <input-->
+<!--                                    type="number"-->
+<!--                                    step="0.01"-->
+<!--                                    id="conf_threshold"-->
+<!--                                    name="conf_threshold"-->
+<!--                                    value="0.25"-->
+<!--                                    class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-lg px-4 py-3 pl-10 focus:border-purple-500 focus:ring-1 focus:ring-purple-500 outline-none text-slate-800 dark:text-slate-200">-->
+<!--                                <i class="fas fa-percent absolute left-3 top-3.5 text-slate-500"></i>-->
+<!--                            </div>-->
+<!--                            <p class="text-xs text-slate-500 mt-1">Minimum confidence to display bounding box</p>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Tabs &ndash;&gt;-->
+<!--                <div class="mb-8">-->
+<!--                    <div class="flex space-x-1 mb-6 mobile-column">-->
+<!--                        <div-->
+<!--                            class="tab tab-active px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-700 dark:text-slate-300 font-medium mobile-full"-->
+<!--                            data-tab="single">-->
+<!--                            <i class="fas fa-image mr-2"></i> Single Image-->
+<!--                        </div>-->
+<!--                        <div-->
+<!--                            class="tab px-5 py-3 rounded-t-lg border-b-2 border-transparent cursor-pointer transition-colors text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 font-medium mobile-full mobile-mt"-->
+<!--                            data-tab="batch">-->
+<!--                            <i class="fas fa-layer-group mr-2"></i> Batch Processing-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Single Image Tab &ndash;&gt;-->
+<!--                    <div id="single-tab" class="tab-content">-->
+<!--                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+<!--                            <div>-->
+<!--                                <label for="image" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                    Image File-->
+<!--                                </label>-->
+<!--                                <div class="relative">-->
+<!--                                    <input-->
+<!--                                        type="file"-->
+<!--                                        id="image"-->
+<!--                                        name="image"-->
+<!--                                        accept="image/*"-->
+<!--                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                    <div id="image-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
+<!--                                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>-->
+<!--                                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>-->
+<!--                                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div id="image-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
+<!--                            </div>-->
+
+<!--                            <div>-->
+<!--                                <label for="label" class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                    Label File-->
+<!--                                </label>-->
+<!--                                <div class="relative">-->
+<!--                                    <input-->
+<!--                                        type="file"-->
+<!--                                        id="label"-->
+<!--                                        name="label"-->
+<!--                                        accept=".txt"-->
+<!--                                        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                    <div id="label-upload-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
+<!--                                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>-->
+<!--                                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>-->
+<!--                                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div id="label-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        <div class="mt-6">-->
+<!--                            <button type="button" id="process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">-->
+<!--                                <i class="fas fa-magic mr-2"></i> Visualize Image-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; Batch Processing Tab &ndash;&gt;-->
+<!--                    <div id="batch-tab" class="tab-content hidden">-->
+<!--                        &lt;!&ndash; iOS Instructions &ndash;&gt;-->
+<!--                        <div class="ios-instructions hidden" id="ios-instructions">-->
+<!--                            <p><i class="fas fa-info-circle"></i> For iOS devices: Upload a ZIP file containing images and labels</p>-->
+<!--                        </div>-->
+
+<!--                        <div class="batch-section">-->
+<!--                            &lt;!&ndash; Standard Batch UI (hidden on iOS mode) &ndash;&gt;-->
+<!--                            <div id="standard-batch-ui" class="mobile-hidden">-->
+<!--                                <div class="mb-6">-->
+<!--                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">-->
+<!--                                        <div>-->
+<!--                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                                Image Files-->
+<!--                                            </label>-->
+<!--                                            <div id="drop-area-images" class="drop-area relative p-6 rounded-lg transition-colors">-->
+<!--                                                <input-->
+<!--                                                    type="file"-->
+<!--                                                    id="batch_images"-->
+<!--                                                    name="batch_images"-->
+<!--                                                    multiple-->
+<!--                                                    accept=".jpg,.jpeg,.png,.bmp,.webp"-->
+<!--                                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                                <div class="text-center">-->
+<!--                                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>-->
+<!--                                                    <p class="text-slate-600 dark:text-slate-400">Click to upload image files</p>-->
+<!--                                                    <p class="text-sm text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div id="image-file-list" class="mt-4 max-h-40 overflow-y-auto">-->
+<!--                                                <div class="text-center py-4 text-slate-500">-->
+<!--                                                    <i class="fas fa-folder-open mb-2"></i>-->
+<!--                                                    <p>No files selected</p>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+
+<!--                                        <div>-->
+<!--                                            <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                                Label Files-->
+<!--                                            </label>-->
+<!--                                            <div id="drop-area-labels" class="drop-area relative p-6 rounded-lg transition-colors">-->
+<!--                                                <input-->
+<!--                                                    type="file"-->
+<!--                                                    id="batch_labels"-->
+<!--                                                    name="batch_labels"-->
+<!--                                                    multiple-->
+<!--                                                    accept=".txt"-->
+<!--                                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                                <div class="text-center">-->
+<!--                                                    <i class="fas fa-cloud-upload-alt text-3xl text-slate-400 mb-3"></i>-->
+<!--                                                    <p class="text-slate-600 dark:text-slate-400">Click to upload label files</p>-->
+<!--                                                    <p class="text-sm text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                            <div id="label-file-list" class="mt-4 max-h-40 overflow-y-auto">-->
+<!--                                                <div class="text-center py-4 text-slate-500">-->
+<!--                                                    <i class="fas fa-folder-open mb-2"></i>-->
+<!--                                                    <p>No files selected</p>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="text-sm text-slate-600 dark:text-slate-400 mb-6 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">-->
+<!--                                    <i class="fas fa-info-circle text-purple-500 mr-2"></i>-->
+<!--                                    Files will be matched by their base names (e.g., image1.jpg and image1.txt). Only files with matching names will be processed.-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            &lt;!&ndash; Mobile/iOS Batch UI &ndash;&gt;-->
+<!--                            <div id="mobile-batch-ui" class="hidden">-->
+<!--                                <div class="mb-6">-->
+<!--                                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">-->
+<!--                                        Upload ZIP File (for iOS/Mobile)-->
+<!--                                    </label>-->
+<!--                                    <div id="drop-area-zip" class="drop-area relative p-6 rounded-lg transition-colors">-->
+<!--                                        <input-->
+<!--                                            type="file"-->
+<!--                                            id="batch_zip"-->
+<!--                                            name="batch_zip"-->
+<!--                                            accept=".zip"-->
+<!--                                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                        <div class="text-center">-->
+<!--                                            <i class="fas fa-file-archive text-3xl text-slate-400 mb-3"></i>-->
+<!--                                            <p class="text-slate-600 dark:text-slate-400">Click to upload a ZIP file</p>-->
+<!--                                            <p class="text-sm text-slate-500 mt-1">Contains images and labels</p>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div id="zip-file-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
+<!--                                </div>-->
+
+<!--                                <div class="text-sm text-slate-600 dark:text-slate-400 mb-6 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">-->
+<!--                                    <i class="fas fa-info-circle text-purple-500 mr-2"></i>-->
+<!--                                    Create a ZIP file containing both images and their corresponding label files. Files should have matching base names (e.g., image1.jpg and image1.txt).-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+
+<!--                        &lt;!&ndash; ZIP Fallback for All Devices &ndash;&gt;-->
+<!--                        <div class="zip-fallback">-->
+<!--                            <div class="mb-3">-->
+<!--                                <i class="fas fa-info-circle text-purple-500 mr-2"></i>-->
+<!--                                <span class="text-sm text-slate-700 dark:text-slate-300">Having trouble with batch uploads? Try ZIP upload</span>-->
+<!--                            </div>-->
+<!--                            <div class="relative">-->
+<!--                                <input-->
+<!--                                    type="file"-->
+<!--                                    id="batch_zip_fallback"-->
+<!--                                    name="batch_zip_fallback"-->
+<!--                                    accept=".zip"-->
+<!--                                    class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">-->
+<!--                                <div id="zip-fallback-area" class="file-card p-5 rounded-lg border border-dashed border-slate-300 dark:border-slate-600 text-center cursor-pointer hover:border-purple-500 transition-colors">-->
+<!--                                    <i class="fas fa-file-archive text-3xl text-slate-400 mb-2"></i>-->
+<!--                                    <p class="text-slate-600 dark:text-slate-400">Click to upload a ZIP file</p>-->
+<!--                                    <p class="text-xs text-slate-500 mt-1">Works on all devices</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div id="zip-fallback-info" class="mt-2 text-sm text-slate-600 dark:text-slate-400"></div>-->
+<!--                        </div>-->
+
+<!--                        <div class="mt-6">-->
+<!--                            <button type="button" id="batch-process-btn" class="btn-primary px-6 py-3 rounded-lg font-medium w-full">-->
+<!--                                <i class="fas fa-bolt mr-2"></i> Visualize Batch-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+<!--                &lt;!&ndash; Progress and Status &ndash;&gt;-->
+<!--                <div class="mt-8">-->
+<!--                    <div class="progress-container hidden mb-4">-->
+<!--                        <div class="flex justify-between text-sm text-slate-600 dark:text-slate-400 mb-2">-->
+<!--                            <span>Processing</span>-->
+<!--                            <span id="progress-text">0%</span>-->
+<!--                        </div>-->
+<!--                        <div class="progress-bar">-->
+<!--                            <div id="progress-fill" class="progress-fill" style="width: 0%"></div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div id="status-container" class="hidden">-->
+<!--                        <h3 class="text-lg font-medium text-slate-800 dark:text-slate-300 mb-3 flex items-center">-->
+<!--                            <i class="fas fa-history mr-2 text-purple-500"></i> Processing Status-->
+<!--                        </h3>-->
+<!--                        <div id="status-messages" class="space-y-3 max-h-60 overflow-y-auto p-2"></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; Footer &ndash;&gt;-->
+<!--        <footer class="mt-12 text-center text-slate-500 text-sm">-->
+<!--            <p>YOLO Dataset Visualizer v2.1 | Enhanced Edition</p>-->
+<!--            <p class="mt-2">Fully responsive with mobile support</p>-->
+<!--        </footer>-->
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        document.addEventListener('DOMContentLoaded', function() {-->
+<!--            // Theme toggle functionality-->
+<!--            const themeToggle = document.getElementById('theme-toggle');-->
+<!--            const themeIcon = document.getElementById('theme-icon');-->
+<!--            const body = document.body;-->
+
+<!--            // Check for saved theme preference or respect OS setting-->
+<!--            const savedTheme = localStorage.getItem('theme');-->
+<!--            if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {-->
+<!--                body.classList.add('dark');-->
+<!--                themeIcon.classList.remove('fa-moon');-->
+<!--                themeIcon.classList.add('fa-sun');-->
+<!--            }-->
+
+<!--            themeToggle.addEventListener('click', () => {-->
+<!--                body.classList.toggle('dark');-->
+<!--                const isDarkMode = body.classList.contains('dark');-->
+<!--                localStorage.setItem('theme', isDarkMode ? 'dark' : 'light');-->
+
+<!--                if (isDarkMode) {-->
+<!--                    themeIcon.classList.remove('fa-moon');-->
+<!--                    themeIcon.classList.add('fa-sun');-->
+<!--                } else {-->
+<!--                    themeIcon.classList.remove('fa-sun');-->
+<!--                    themeIcon.classList.add('fa-moon');-->
+<!--                }-->
+<!--            });-->
+
+<!--            // DOM elements-->
+<!--            const tabs = document.querySelectorAll('.tab');-->
+<!--            const tabContents = document.querySelectorAll('.tab-content');-->
+<!--            const dropAreaImages = document.getElementById('drop-area-images');-->
+<!--            const dropAreaLabels = document.getElementById('drop-area-labels');-->
+<!--            const imagesInput = document.getElementById('batch_images');-->
+<!--            const labelsInput = document.getElementById('batch_labels');-->
+<!--            const imageFileList = document.getElementById('image-file-list');-->
+<!--            const labelFileList = document.getElementById('label-file-list');-->
+<!--            const progressContainer = document.querySelector('.progress-container');-->
+<!--            const progressFill = document.getElementById('progress-fill');-->
+<!--            const progressText = document.getElementById('progress-text');-->
+<!--            const statusContainer = document.getElementById('status-container');-->
+<!--            const statusMessages = document.getElementById('status-messages');-->
+<!--            const singleProcessBtn = document.getElementById('process-btn');-->
+<!--            const batchProcessBtn = document.getElementById('batch-process-btn');-->
+<!--            const processingMode = document.getElementById('processing_mode');-->
+<!--            const modalContainer = document.getElementById('modal-container');-->
+<!--            const modalTitle = document.getElementById('modal-title');-->
+<!--            const modalMessage = document.getElementById('modal-message');-->
+<!--            const modalIcon = document.getElementById('modal-icon');-->
+<!--            const modalConfirm = document.getElementById('modal-confirm');-->
+
+<!--            // File info elements-->
+<!--            const imageFileInfo = document.getElementById('image-file-info');-->
+<!--            const labelFileInfo = document.getElementById('label-file-info');-->
+<!--            const classesFileInfo = document.getElementById('classes-file-info');-->
+<!--            const imageUploadArea = document.getElementById('image-upload-area');-->
+<!--            const labelUploadArea = document.getElementById('label-upload-area');-->
+<!--            const classesUploadArea = document.getElementById('classes-upload-area');-->
+<!--            const zipFileInfo = document.getElementById('zip-file-info');-->
+<!--            const zipFallbackInfo = document.getElementById('zip-fallback-info');-->
+<!--            const zipFallbackArea = document.getElementById('zip-fallback-area');-->
+<!--            const zipFallbackInput = document.getElementById('batch_zip_fallback');-->
+
+<!--            // iOS Mode Toggle-->
+<!--            const iosToggle = document.getElementById('ios-toggle');-->
+<!--            const iosToggleText = document.getElementById('ios-toggle-text');-->
+<!--            const iosInstructions = document.getElementById('ios-instructions');-->
+<!--            const standardBatchUI = document.getElementById('standard-batch-ui');-->
+<!--            const mobileBatchUI = document.getElementById('mobile-batch-ui');-->
+<!--            let isIOSMode = false;-->
+
+<!--            // Detect iOS devices-->
+<!--            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;-->
+
+<!--            // Auto-enable iOS mode on iOS devices-->
+<!--            if (isIOS) {-->
+<!--                enableIOSMode();-->
+<!--            }-->
+
+<!--            iosToggle.addEventListener('click', () => {-->
+<!--                isIOSMode = !isIOSMode;-->
+<!--                if (isIOSMode) {-->
+<!--                    enableIOSMode();-->
+<!--                } else {-->
+<!--                    disableIOSMode();-->
+<!--                }-->
+<!--            });-->
+
+<!--            function enableIOSMode() {-->
+<!--                body.classList.add('ios-mode');-->
+<!--                iosToggleText.textContent = 'Switch to Desktop Mode';-->
+<!--                iosInstructions.classList.remove('hidden');-->
+<!--                standardBatchUI.classList.add('hidden');-->
+<!--                mobileBatchUI.classList.remove('hidden');-->
+<!--                isIOSMode = true;-->
+<!--            }-->
+
+<!--            function disableIOSMode() {-->
+<!--                body.classList.remove('ios-mode');-->
+<!--                iosToggleText.textContent = 'Switch to iOS/Mobile Mode';-->
+<!--                iosInstructions.classList.add('hidden');-->
+<!--                standardBatchUI.classList.remove('hidden');-->
+<!--                mobileBatchUI.classList.add('hidden');-->
+<!--                isIOSMode = false;-->
+<!--            }-->
+
+<!--            // Setup ZIP file upload for mobile/iOS-->
+<!--            const zipInput = document.getElementById('batch_zip');-->
+<!--            const dropAreaZip = document.getElementById('drop-area-zip');-->
+
+<!--            dropAreaZip.addEventListener('click', () => {-->
+<!--                zipInput.click();-->
+<!--            });-->
+
+<!--            zipInput.addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    zipFileInfo.innerHTML = `<i class="fas fa-file-archive mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                } else {-->
+<!--                    zipFileInfo.innerHTML = '';-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Setup fallback ZIP upload-->
+<!--            zipFallbackInput.addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    zipFallbackInfo.innerHTML = `<i class="fas fa-file-archive mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                    zipFallbackArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-archive text-3xl text-purple-500 mb-2"></i>-->
+<!--                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    zipFallbackInfo.innerHTML = '';-->
+<!--                    zipFallbackArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-archive text-3xl text-slate-400 mb-2"></i>-->
+<!--                        <p class="text-slate-600 dark:text-slate-400">Click to upload a ZIP file</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">Works on all devices</p>-->
+<!--                    `;-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Tab switching-->
+<!--            tabs.forEach(tab => {-->
+<!--                tab.addEventListener('click', () => {-->
+<!--                    tabs.forEach(t => t.classList.remove('tab-active', 'border-purple-500', 'text-purple-500'));-->
+<!--                    tab.classList.add('tab-active', 'border-purple-500', 'text-purple-500');-->
+
+<!--                    const tabName = tab.getAttribute('data-tab');-->
+<!--                    tabContents.forEach(tc => tc.classList.add('hidden'));-->
+<!--                    document.getElementById(`${tabName}-tab`).classList.remove('hidden');-->
+
+<!--                    // Update processing mode-->
+<!--                    processingMode.value = tabName;-->
+<!--                });-->
+<!--            });-->
+
+<!--            // Modal functions-->
+<!--            function showModal(title, message, type = 'info') {-->
+<!--                modalTitle.textContent = title;-->
+<!--                modalMessage.textContent = message;-->
+
+<!--                // Set icon and color based on type-->
+<!--                if (type === 'error') {-->
+<!--                    modalIcon.className = 'modal-icon fas fa-exclamation-circle text-rose-500';-->
+<!--                } else if (type === 'warning') {-->
+<!--                    modalIcon.className = 'modal-icon fas fa-exclamation-triangle text-amber-500';-->
+<!--                } else if (type === 'success') {-->
+<!--                    modalIcon.className = 'modal-icon fas fa-check-circle text-emerald-500';-->
+<!--                } else {-->
+<!--                    modalIcon.className = 'modal-icon fas fa-info-circle text-blue-500';-->
+<!--                }-->
+
+<!--                modalContainer.classList.remove('hidden');-->
+<!--            }-->
+
+<!--            modalConfirm.addEventListener('click', () => {-->
+<!--                modalContainer.classList.add('hidden');-->
+<!--            });-->
+
+<!--            // Setup file uploads for classes file-->
+<!--            document.getElementById('classes_file').addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    classesFileInfo.innerHTML = `<i class="fas fa-file-text mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                    classesUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-text text-3xl text-purple-500 mb-2"></i>-->
+<!--                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    classesFileInfo.innerHTML = '';-->
+<!--                    classesUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-upload text-3xl text-slate-400 mb-2"></i>-->
+<!--                        <p class="text-slate-600 dark:text-slate-400">Click to upload classes.txt</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                    `;-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Setup file selection for single image mode-->
+<!--            document.getElementById('image').addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    imageFileInfo.innerHTML = `<i class="fas fa-file-image mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                    imageUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-image text-3xl text-purple-500 mb-2"></i>-->
+<!--                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    imageFileInfo.innerHTML = '';-->
+<!--                    imageUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>-->
+<!--                        <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>-->
+<!--                    `;-->
+<!--                }-->
+<!--            });-->
+
+<!--            document.getElementById('label').addEventListener('change', function() {-->
+<!--                if (this.files.length > 0) {-->
+<!--                    const file = this.files[0];-->
+<!--                    labelFileInfo.innerHTML = `<i class="fas fa-file-alt mr-2 text-purple-500"></i> ${file.name} (${formatFileSize(file.size)})`;-->
+<!--                    labelUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-alt text-3xl text-purple-500 mb-2"></i>-->
+<!--                        <p class="text-purple-600 dark:text-purple-400 font-medium">${file.name}</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">${formatFileSize(file.size)}</p>-->
+<!--                    `;-->
+<!--                } else {-->
+<!--                    labelFileInfo.innerHTML = '';-->
+<!--                    labelUploadArea.innerHTML = `-->
+<!--                        <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>-->
+<!--                        <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>-->
+<!--                        <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                    `;-->
+<!--                }-->
+<!--            });-->
+
+<!--            // Setup batch file uploads with enhanced reliability-->
+<!--            setupFileUpload(imagesInput, imageFileList, 'image');-->
+<!--            setupFileUpload(labelsInput, labelFileList, 'text');-->
+
+<!--            function setupFileUpload(input, container, type) {-->
+<!--                // Mobile-friendly: Trigger input when drop area is clicked-->
+<!--                const dropArea = input.id === 'batch_images' ? dropAreaImages : dropAreaLabels;-->
+<!--                dropArea.addEventListener('click', () => {-->
+<!--                    input.click();-->
+<!--                });-->
+
+<!--                // Handle file selection-->
+<!--                input.addEventListener('change', function() {-->
+<!--                    const files = Array.from(this.files);-->
+<!--                    renderFileList(files, container, type);-->
+<!--                });-->
+<!--            }-->
+
+<!--            function renderFileList(files, container, type) {-->
+<!--                container.innerHTML = '';-->
+
+<!--                if (files.length === 0) {-->
+<!--                    container.innerHTML = `-->
+<!--                        <div class="text-center py-4 text-slate-500">-->
+<!--                            <i class="fas fa-folder-open mb-2"></i>-->
+<!--                            <p>No files selected</p>-->
+<!--                        </div>-->
+<!--                    `;-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                files.forEach((file, index) => {-->
+<!--                    const fileItem = document.createElement('div');-->
+<!--                    fileItem.className = 'flex items-center justify-between p-3 bg-slate-100 dark:bg-slate-800 rounded-lg mb-2';-->
+
+<!--                    const fileInfo = document.createElement('div');-->
+<!--                    fileInfo.className = 'flex items-center';-->
+
+<!--                    const fileIcon = document.createElement('i');-->
+<!--                    fileIcon.className = type === 'image' ?-->
+<!--                        'fas fa-file-image text-purple-500 mr-3' : 'fas fa-file-alt text-purple-500 mr-3';-->
+
+<!--                    const fileDetails = document.createElement('div');-->
+
+<!--                    const fileName = document.createElement('div');-->
+<!--                    fileName.className = 'text-slate-700 dark:text-slate-300 text-sm truncate max-w-[180px]';-->
+<!--                    fileName.textContent = file.name;-->
+
+<!--                    const fileSize = document.createElement('div');-->
+<!--                    fileSize.className = 'text-slate-500 text-xs';-->
+<!--                    fileSize.textContent = formatFileSize(file.size);-->
+
+<!--                    fileDetails.appendChild(fileName);-->
+<!--                    fileDetails.appendChild(fileSize);-->
+<!--                    fileInfo.appendChild(fileIcon);-->
+<!--                    fileInfo.appendChild(fileDetails);-->
+
+<!--                    const removeBtn = document.createElement('button');-->
+<!--                    removeBtn.className = 'text-slate-500 hover:text-rose-500';-->
+<!--                    removeBtn.innerHTML = '<i class="fas fa-times"></i>';-->
+<!--                    removeBtn.onclick = () => {-->
+<!--                        const dataTransfer = new DataTransfer();-->
+<!--                        const input = container.id === 'image-file-list' ? imagesInput : labelsInput;-->
+<!--                        const currentFiles = Array.from(input.files);-->
+<!--                        currentFiles.splice(index, 1);-->
+
+<!--                        currentFiles.forEach(f => dataTransfer.items.add(f));-->
+<!--                        input.files = dataTransfer.files;-->
+<!--                        renderFileList(currentFiles, container, type);-->
+<!--                    };-->
+
+<!--                    fileItem.appendChild(fileInfo);-->
+<!--                    fileItem.appendChild(removeBtn);-->
+<!--                    container.appendChild(fileItem);-->
+<!--                });-->
+<!--            }-->
+
+<!--            function formatFileSize(bytes) {-->
+<!--                if (bytes === 0) return '0 Bytes';-->
+<!--                const k = 1024;-->
+<!--                const sizes = ['Bytes', 'KB', 'MB', 'GB'];-->
+<!--                const i = Math.floor(Math.log(bytes) / Math.log(k));-->
+<!--                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];-->
+<!--            }-->
+
+<!--            function addStatusMessage(message, type) {-->
+<!--                const messageDiv = document.createElement('div');-->
+<!--                messageDiv.className = `status-item p-3 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-start ${-->
+<!--                    type === 'processing' ? 'status-processing' :-->
+<!--                    type === 'complete' ? 'status-complete' :-->
+<!--                    type === 'warning' ? 'status-warning' :-->
+<!--                    'status-error'-->
+<!--                }`;-->
+
+<!--                let icon = '';-->
+<!--                let iconClass = '';-->
+
+<!--                if (type === 'processing') {-->
+<!--                    icon = '<i class="fas fa-sync-alt animate-spin"></i>';-->
+<!--                    iconClass = 'text-purple-500';-->
+<!--                } else if (type === 'complete') {-->
+<!--                    icon = '<i class="fas fa-check-circle"></i>';-->
+<!--                    iconClass = 'text-emerald-500';-->
+<!--                } else if (type === 'warning') {-->
+<!--                    icon = '<i class="fas fa-exclamation-triangle"></i>';-->
+<!--                    iconClass = 'text-amber-500';-->
+<!--                } else {-->
+<!--                    icon = '<i class="fas fa-exclamation-circle"></i>';-->
+<!--                    iconClass = 'text-rose-500';-->
+<!--                }-->
+
+<!--                messageDiv.innerHTML = `-->
+<!--                    <div class="mr-3 text-lg ${iconClass}">${icon}</div>-->
+<!--                    <div class="text-slate-700 dark:text-slate-300">${message}</div>-->
+<!--                `;-->
+
+<!--                statusMessages.appendChild(messageDiv);-->
+<!--                statusContainer.scrollTop = statusContainer.scrollHeight;-->
+<!--            }-->
+
+<!--            function removeStatusMessage(messageText) {-->
+<!--                const messages = statusMessages.querySelectorAll('.status-item');-->
+<!--                messages.forEach(msg => {-->
+<!--                    if (msg.textContent.includes(messageText)) {-->
+<!--                        msg.remove();-->
+<!--                    }-->
+<!--                });-->
+<!--            }-->
+
+<!--            function getBaseName(filename) {-->
+<!--                // Remove extension and any .rf suffix-->
+<!--                return filename.replace(/(\.rf\.[a-f0-9]+)?\.[^/.]+$/i, "");-->
+<!--            }-->
+
+<!--            function validateClassConfiguration() {-->
+<!--                const classNamesText = document.getElementById('class_names').value.trim();-->
+<!--                const classesFile = document.getElementById('classes_file').files[0];-->
+
+<!--                if (!classNamesText && !classesFile) {-->
+<!--                    showModal(-->
+<!--                        'Class Configuration Missing',-->
+<!--                        'You have not provided any class names. The visualization will use the default class "object".',-->
+<!--                        'warning'-->
+<!--                    );-->
+<!--                    return true; // Allow to proceed with default-->
+<!--                }-->
+<!--                return true;-->
+<!--            }-->
+
+<!--            function validateSingleImageFiles() {-->
+<!--                const imageInput = document.getElementById('image');-->
+<!--                const labelInput = document.getElementById('label');-->
+
+<!--                // Check if image is uploaded-->
+<!--                if (!imageInput.files[0]) {-->
+<!--                    showModal(-->
+<!--                        'Image Missing',-->
+<!--                        'Please upload an image file for processing.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return false;-->
+<!--                }-->
+
+<!--                // Check if label is uploaded-->
+<!--                if (!labelInput.files[0]) {-->
+<!--                    showModal(-->
+<!--                        'Label File Required',-->
+<!--                        'You must upload a corresponding .txt label file for the image.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return false;-->
+<!--                }-->
+
+<!--                // Check if filenames match-->
+<!--                const imageFile = imageInput.files[0];-->
+<!--                const labelFile = labelInput.files[0];-->
+<!--                const imageBase = getBaseName(imageFile.name);-->
+<!--                const labelBase = getBaseName(labelFile.name);-->
+
+<!--                if (imageBase !== labelBase) {-->
+<!--                    showModal(-->
+<!--                        'Filename Mismatch',-->
+<!--                        'The image and label file names do not match. Please ensure the files correspond to each other.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return false;-->
+<!--                }-->
+
+<!--                return true;-->
+<!--            }-->
+
+<!--            // Single image processing-->
+<!--            singleProcessBtn.addEventListener('click', function() {-->
+<!--                // Validate class configuration-->
+<!--                if (!validateClassConfiguration()) {-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                // Validate files-->
+<!--                if (!validateSingleImageFiles()) {-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                // Show progress-->
+<!--                progressContainer.classList.remove('hidden');-->
+<!--                progressFill.style.width = '0%';-->
+<!--                progressText.textContent = '0%';-->
+<!--                statusContainer.classList.remove('hidden');-->
+<!--                statusMessages.innerHTML = '';-->
+<!--                singleProcessBtn.disabled = true;-->
+<!--                singleProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';-->
+
+<!--                // Create FormData-->
+<!--                const formData = new FormData();-->
+
+<!--                // Add parameters-->
+<!--                formData.append('processing_mode', 'single');-->
+<!--                formData.append('max_size', document.getElementById('max_size').value);-->
+<!--                formData.append('conf_threshold', document.getElementById('conf_threshold').value);-->
+<!--                formData.append('class_names', document.getElementById('class_names').value);-->
+
+<!--                // Add classes file if uploaded-->
+<!--                const classesFile = document.getElementById('classes_file').files[0];-->
+<!--                if (classesFile) {-->
+<!--                    formData.append('classes_file', classesFile);-->
+<!--                }-->
+
+<!--                // Add image and label-->
+<!--                const imageInput = document.getElementById('image');-->
+<!--                const labelInput = document.getElementById('label');-->
+<!--                formData.append('image', imageInput.files[0]);-->
+<!--                formData.append('label', labelInput.files[0]);-->
+
+<!--                // Submit via AJAX-->
+<!--                const xhr = new XMLHttpRequest();-->
+<!--                xhr.open('POST', '/process', true);-->
+
+<!--                // Show upload progress-->
+<!--                xhr.upload.onprogress = function(event) {-->
+<!--                    if (event.lengthComputable) {-->
+<!--                        const percent = Math.round((event.loaded / event.total) * 100);-->
+<!--                        progressFill.style.width = percent + '%';-->
+<!--                        progressText.textContent = percent + '%';-->
+<!--                    }-->
+<!--                };-->
+
+<!--                xhr.onload = function() {-->
+<!--                    progressFill.style.width = '100%';-->
+<!--                    progressText.textContent = '100%';-->
+
+<!--                    setTimeout(() => {-->
+<!--                        singleProcessBtn.disabled = false;-->
+<!--                        singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';-->
+
+<!--                        // Reset file inputs after processing-->
+<!--                        document.getElementById('image').value = '';-->
+<!--                        document.getElementById('label').value = '';-->
+<!--                        imageFileInfo.innerHTML = '';-->
+<!--                        labelFileInfo.innerHTML = '';-->
+<!--                        imageUploadArea.innerHTML = `-->
+<!--                            <i class="fas fa-file-image text-3xl text-slate-400 mb-2"></i>-->
+<!--                            <p class="text-slate-600 dark:text-slate-400">Click to upload an image</p>-->
+<!--                            <p class="text-xs text-slate-500 mt-1">Supports JPG, PNG, WEBP, BMP</p>-->
+<!--                        `;-->
+<!--                        labelUploadArea.innerHTML = `-->
+<!--                            <i class="fas fa-file-alt text-3xl text-slate-400 mb-2"></i>-->
+<!--                            <p class="text-slate-600 dark:text-slate-400">Click to upload a label file</p>-->
+<!--                            <p class="text-xs text-slate-500 mt-1">Supports .txt files</p>-->
+<!--                        `;-->
+<!--                    }, 1000);-->
+
+<!--                    if (xhr.status === 200) {-->
+<!--                        // Create download link-->
+<!--                        const blob = new Blob([xhr.response], {type: 'image/jpeg'});-->
+<!--                        const url = URL.createObjectURL(blob);-->
+<!--                        const a = document.createElement('a');-->
+<!--                        a.href = url;-->
+<!--                        a.download = 'visualized_' + document.getElementById('image').files[0].name;-->
+<!--                        document.body.appendChild(a);-->
+<!--                        a.click();-->
+
+<!--                        setTimeout(() => {-->
+<!--                            document.body.removeChild(a);-->
+<!--                            URL.revokeObjectURL(url);-->
+<!--                        }, 100);-->
+
+<!--                        // Add status message-->
+<!--                        addStatusMessage('Image processed and downloaded', 'complete');-->
+<!--                    } else {-->
+<!--                        try {-->
+<!--                            const error = JSON.parse(xhr.responseText).error;-->
+<!--                            addStatusMessage(`Error: ${error}`, 'error');-->
+<!--                        } catch {-->
+<!--                            addStatusMessage('An error occurred during processing', 'error');-->
+<!--                        }-->
+<!--                    }-->
+<!--                };-->
+
+<!--                xhr.onerror = function() {-->
+<!--                    singleProcessBtn.disabled = false;-->
+<!--                    singleProcessBtn.innerHTML = '<i class="fas fa-magic mr-2"></i> Visualize Image';-->
+<!--                    addStatusMessage('An error occurred during processing', 'error');-->
+<!--                };-->
+
+<!--                xhr.responseType = 'blob';-->
+<!--                xhr.send(formData);-->
+<!--            });-->
+
+<!--            // Batch processing - unified handler-->
+<!--            batchProcessBtn.addEventListener('click', function() {-->
+<!--                // Validate class configuration-->
+<!--                if (!validateClassConfiguration()) {-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                let formData = new FormData();-->
+<!--                let isZipUpload = false;-->
+<!--                let isFallbackZip = false;-->
+<!--                let zipFile = null;-->
+
+<!--                // Add parameters-->
+<!--                formData.append('processing_mode', 'batch');-->
+<!--                formData.append('max_size', document.getElementById('max_size').value);-->
+<!--                formData.append('conf_threshold', document.getElementById('conf_threshold').value);-->
+<!--                formData.append('class_names', document.getElementById('class_names').value);-->
+
+<!--                // Add classes file if uploaded-->
+<!--                const classesFile = document.getElementById('classes_file').files[0];-->
+<!--                if (classesFile) {-->
+<!--                    formData.append('classes_file', classesFile);-->
+<!--                }-->
+
+<!--                // Determine upload type-->
+<!--                if (isIOSMode || isIOS) {-->
+<!--                    // ZIP file upload for iOS/mobile mode-->
+<!--                    zipFile = zipInput.files[0];-->
+<!--                    if (zipFile) {-->
+<!--                        formData.append('batch_zip', zipFile);-->
+<!--                        isZipUpload = true;-->
+<!--                    }-->
+<!--                }-->
+
+<!--                // Check for fallback ZIP file-->
+<!--                if (!isZipUpload) {-->
+<!--                    const fallbackZip = zipFallbackInput.files[0];-->
+<!--                    if (fallbackZip) {-->
+<!--                        formData.append('batch_zip', fallbackZip);-->
+<!--                        isZipUpload = true;-->
+<!--                        isFallbackZip = true;-->
+<!--                    }-->
+<!--                }-->
+
+<!--                // If using ZIP upload-->
+<!--                if (isZipUpload) {-->
+<!--                    // Show progress-->
+<!--                    progressContainer.classList.remove('hidden');-->
+<!--                    progressFill.style.width = '0%';-->
+<!--                    progressText.textContent = '0%';-->
+<!--                    statusContainer.classList.remove('hidden');-->
+<!--                    statusMessages.innerHTML = '';-->
+<!--                    batchProcessBtn.disabled = true;-->
+<!--                    batchProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';-->
+
+<!--                    // Add initial status message-->
+<!--                    const processingMessage = 'Starting ZIP batch processing...';-->
+<!--                    addStatusMessage(processingMessage, 'processing');-->
+
+<!--                    // Create XMLHttpRequest for processing-->
+<!--                    const xhr = new XMLHttpRequest();-->
+<!--                    xhr.open('POST', '/process', true);-->
+
+<!--                    // Show upload progress-->
+<!--                    xhr.upload.onprogress = function(event) {-->
+<!--                        if (event.lengthComputable) {-->
+<!--                            const percent = Math.round((event.loaded / event.total) * 50); // First 50% for upload-->
+<!--                            progressFill.style.width = percent + '%';-->
+<!--                            progressText.textContent = percent + '%';-->
+<!--                        }-->
+<!--                    };-->
+
+<!--                    // Handle response-->
+<!--                    xhr.onload = function() {-->
+<!--                        // Simulate processing progress-->
+<!--                        let progress = 50;-->
+<!--                        const interval = setInterval(() => {-->
+<!--                            progress += 1;-->
+<!--                            progressFill.style.width = progress + '%';-->
+<!--                            progressText.textContent = progress + '%';-->
+
+<!--                            if (progress >= 100) {-->
+<!--                                clearInterval(interval);-->
+<!--                                batchProcessBtn.disabled = false;-->
+<!--                                batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';-->
+
+<!--                                // Remove the initial processing message-->
+<!--                                removeStatusMessage(processingMessage);-->
+<!--                            }-->
+<!--                        }, 50);-->
+
+<!--                        if (xhr.status === 200) {-->
+<!--                            // Create download link-->
+<!--                            const blob = new Blob([xhr.response], {type: 'application/zip'});-->
+<!--                            const url = URL.createObjectURL(blob);-->
+<!--                            const a = document.createElement('a');-->
+<!--                            a.href = url;-->
+<!--                            a.download = 'visualized_images.zip';-->
+<!--                            document.body.appendChild(a);-->
+<!--                            a.click();-->
+
+<!--                            setTimeout(() => {-->
+<!--                                document.body.removeChild(a);-->
+<!--                                URL.revokeObjectURL(url);-->
+<!--                            }, 100);-->
+
+<!--                            addStatusMessage('Batch processed and zip downloaded', 'complete');-->
+<!--                        } else {-->
+<!--                            try {-->
+<!--                                const error = JSON.parse(xhr.responseText).error;-->
+<!--                                addStatusMessage(`Error: ${error}`, 'error');-->
+<!--                            } catch {-->
+<!--                                addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                            }-->
+<!--                        }-->
+
+<!--                        // Clear file inputs after processing to fix first-time issue-->
+<!--                        if (isFallbackZip) {-->
+<!--                            zipFallbackInput.value = '';-->
+<!--                            zipFallbackInfo.innerHTML = '';-->
+<!--                            zipFallbackArea.innerHTML = `-->
+<!--                                <i class="fas fa-file-archive text-3xl text-slate-400 mb-2"></i>-->
+<!--                                <p class="text-slate-600 dark:text-slate-400">Click to upload a ZIP file</p>-->
+<!--                                <p class="text-xs text-slate-500 mt-1">Works on all devices</p>-->
+<!--                            `;-->
+<!--                        } else {-->
+<!--                            zipInput.value = '';-->
+<!--                            zipFileInfo.innerHTML = '';-->
+<!--                        }-->
+<!--                    };-->
+
+<!--                    xhr.onerror = function() {-->
+<!--                        batchProcessBtn.disabled = false;-->
+<!--                        batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';-->
+<!--                        addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                    };-->
+
+<!--                    xhr.responseType = 'blob';-->
+<!--                    xhr.send(formData);-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                // Standard batch processing-->
+<!--                let imageFiles = Array.from(imagesInput.files);-->
+<!--                let labelFiles = Array.from(labelsInput.files);-->
+
+<!--                // Desktop workaround: Check files again to prevent first-time failure-->
+<!--                if (imageFiles.length === 0 && labelFiles.length === 0) {-->
+<!--                    imageFiles = Array.from(imagesInput.files);-->
+<!--                    labelFiles = Array.from(labelsInput.files);-->
+<!--                }-->
+
+<!--                // Validate files-->
+<!--                if (imageFiles.length === 0 && labelFiles.length === 0) {-->
+<!--                    showModal(-->
+<!--                        'Files Missing',-->
+<!--                        'Please upload at least one image and one label file for batch processing.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return;-->
+<!--                } else if (imageFiles.length === 0) {-->
+<!--                    showModal(-->
+<!--                        'Image Files Missing',-->
+<!--                        'Please upload at least one image file for batch processing.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return;-->
+<!--                } else if (labelFiles.length === 0) {-->
+<!--                    showModal(-->
+<!--                        'Label Files Missing',-->
+<!--                        'Please upload at least one label file for batch processing.',-->
+<!--                        'error'-->
+<!--                    );-->
+<!--                    return;-->
+<!--                }-->
+
+<!--                // Add images-->
+<!--                imageFiles.forEach(file => {-->
+<!--                    formData.append('batch_images', file);-->
+<!--                });-->
+
+<!--                // Add labels-->
+<!--                labelFiles.forEach(file => {-->
+<!--                    formData.append('batch_labels', file);-->
+<!--                });-->
+
+<!--                // Show progress-->
+<!--                progressContainer.classList.remove('hidden');-->
+<!--                progressFill.style.width = '0%';-->
+<!--                progressText.textContent = '0%';-->
+<!--                statusContainer.classList.remove('hidden');-->
+<!--                statusMessages.innerHTML = '';-->
+<!--                batchProcessBtn.disabled = true;-->
+<!--                batchProcessBtn.innerHTML = '<i class="fas fa-spinner animate-spin mr-2"></i> Processing...';-->
+
+<!--                // Add initial status message-->
+<!--                const processingMessage = 'Starting batch processing...';-->
+<!--                addStatusMessage(processingMessage, 'processing');-->
+
+<!--                // Create XMLHttpRequest for processing-->
+<!--                const xhr = new XMLHttpRequest();-->
+<!--                xhr.open('POST', '/process', true);-->
+
+<!--                // Show upload progress-->
+<!--                xhr.upload.onprogress = function(event) {-->
+<!--                    if (event.lengthComputable) {-->
+<!--                        const percent = Math.round((event.loaded / event.total) * 50); // First 50% for upload-->
+<!--                        progressFill.style.width = percent + '%';-->
+<!--                        progressText.textContent = percent + '%';-->
+<!--                    }-->
+<!--                };-->
+
+<!--                // Handle response-->
+<!--                xhr.onload = function() {-->
+<!--                    // Simulate processing progress-->
+<!--                    let progress = 50;-->
+<!--                    const interval = setInterval(() => {-->
+<!--                        progress += 1;-->
+<!--                        progressFill.style.width = progress + '%';-->
+<!--                        progressText.textContent = progress + '%';-->
+
+<!--                        if (progress >= 100) {-->
+<!--                            clearInterval(interval);-->
+<!--                            batchProcessBtn.disabled = false;-->
+<!--                            batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';-->
+
+<!--                            // Remove the initial processing message-->
+<!--                            removeStatusMessage(processingMessage);-->
+<!--                        }-->
+<!--                    }, 50);-->
+
+<!--                    if (xhr.status === 200) {-->
+<!--                        // Create download link-->
+<!--                        const blob = new Blob([xhr.response], {type: 'application/zip'});-->
+<!--                        const url = URL.createObjectURL(blob);-->
+<!--                        const a = document.createElement('a');-->
+<!--                        a.href = url;-->
+<!--                        a.download = 'visualized_images.zip';-->
+<!--                        document.body.appendChild(a);-->
+<!--                        a.click();-->
+
+<!--                        setTimeout(() => {-->
+<!--                            document.body.removeChild(a);-->
+<!--                            URL.revokeObjectURL(url);-->
+<!--                        }, 100);-->
+
+<!--                        addStatusMessage('Batch processed and zip downloaded', 'complete');-->
+<!--                    } else {-->
+<!--                        try {-->
+<!--                            const error = JSON.parse(xhr.responseText).error;-->
+<!--                            addStatusMessage(`Error: ${error}`, 'error');-->
+<!--                        } catch {-->
+<!--                            addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                        }-->
+<!--                    }-->
+
+<!--                    // Clear file lists after processing-->
+<!--                    imageFileList.innerHTML = `-->
+<!--                        <div class="text-center py-4 text-slate-500">-->
+<!--                            <i class="fas fa-folder-open mb-2"></i>-->
+<!--                            <p>No files selected</p>-->
+<!--                        </div>-->
+<!--                    `;-->
+<!--                    labelFileList.innerHTML = `-->
+<!--                        <div class="text-center py-4 text-slate-500">-->
+<!--                            <i class="fas fa-folder-open mb-2"></i>-->
+<!--                            <p>No files selected</p>-->
+<!--                        </div>-->
+<!--                    `;-->
+
+<!--                    // Reset inputs to fix first-time upload issue-->
+<!--                    imagesInput.value = '';-->
+<!--                    labelsInput.value = '';-->
+<!--                };-->
+
+<!--                xhr.onerror = function() {-->
+<!--                    batchProcessBtn.disabled = false;-->
+<!--                    batchProcessBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Visualize Batch';-->
+<!--                    addStatusMessage('An error occurred during batch processing', 'error');-->
+<!--                };-->
+
+<!--                xhr.responseType = 'blob';-->
+<!--                xhr.send(formData);-->
+<!--            });-->
+<!--        });-->
+<!--    </script>-->
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YOLO Dataset Visualizer | Enhanced</title>
+    <title>YOLO Dataset Visualizer</title>
+    <!-- Favicon links -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/my-favicon/apple-touch-icon.png">
+<!--    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon/favicon-32x32.png">-->
+<!--    <link rel="icon" type="image/png" sizes="16x16" href="/static/favicon/favicon-16x16.png">-->
+    <link rel="icon" type="image/png" href="/my-favicon/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/png" href="/my-favicon/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="/my-favicon/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/svg+xml" href="/my-favicon/favicon.svg" />
+    <meta name="apple-mobile-web-app-title" content="YOLO Dataset Visualizer" />
+    <link rel="manifest" href="/my-favicon/site.webmanifest">
+<!--    <link rel="mask-icon" href="/static/favicon/safari-pinned-tab.svg" color="#a855f7">-->
+    <link rel="shortcut icon" href="/my-favicon/favicon.ico">
+    <meta name="msapplication-TileColor" content="#a855f7">
+    <meta name="msapplication-config" content="/static/favicon/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
