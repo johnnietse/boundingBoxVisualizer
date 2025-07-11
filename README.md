@@ -76,7 +76,7 @@ http://localhost:5000
 - Batch Processing (for desktop version):
   - Select "Batch Processing" tab
   - Drag and drop/upload image files & drag and drop/upload label files
-  - OR you can drag and drop/upload zip file containing all the necessary image files and their corresponding YOLO label '.txt' files like how the mobile/ios version can do
+  - OR you can drag and drop/upload zip file containing all the necessary image files and their corresponding YOLO label '.txt' files like how the mobile/ios version support it
   - Configure visualization settings
   - Click "Visualize Batch" to process and download as ZIP
  
