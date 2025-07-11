@@ -358,6 +358,59 @@
             border-radius: 8px;
             border: 1px dashed rgba(168, 85, 247, 0.3);
         }
+
+
+        .social-icons {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        gap: 15px;
+        z-index: 100;
+        }
+    
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        .social-icon:hover {
+            transform: translateY(-5px);
+        }
+    
+        .light-icon {
+            background-color: #ffffff;
+            color: #4b5563;
+        }
+    
+        .dark-icon {
+            background-color: #1e293b;
+            color: #e2e8f0;
+        }
+    
+        /* Show/hide based on theme */
+        .dark .light-icon {
+            display: none;
+        }
+    
+        .dark .dark-icon {
+            display: flex;
+        }
+    
+        .light-icon {
+            display: flex;
+        }
+    
+        .dark-icon {
+            display: none;
+        }
+        
     </style>
 </head>
 <body class="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
@@ -1549,5 +1602,37 @@
             });
         });
     </script>
+
+
+    <div class="social-icons">
+        <!-- Light mode icons -->
+        <a href="https://instagram.com/yourprofile" target="_blank" class="social-icon light-icon">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="mailto:you@example.com" class="social-icon light-icon">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://linkedin.com/in/yourprofile" target="_blank" class="social-icon light-icon">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://github.com/yourprofile" target="_blank" class="social-icon light-icon">
+            <i class="fab fa-github"></i>
+        </a>
+        
+        <!-- Dark mode icons -->
+        <a href="https://www.instagram.com/jt__boi/" target="_blank" class="social-icon dark-icon">
+            <i class="fab fa-instagram"></i>
+        </a>
+        <a href="mailto:johnnietse994@gmail.com" class="social-icon dark-icon">
+            <i class="fas fa-envelope"></i>
+        </a>
+        <a href="https://www.linkedin.com/in/johnnie-tse/" target="_blank" class="social-icon dark-icon">
+            <i class="fab fa-linkedin-in"></i>
+        </a>
+        <a href="https://github.com/johnnietse/boundingBoxVisualizer.git" target="_blank" class="social-icon dark-icon">
+            <i class="fab fa-github"></i>
+        </a>
+    </div>
+    
 </body>
 </html>
