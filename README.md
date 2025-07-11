@@ -73,15 +73,23 @@ http://localhost:5000
   - Configure visualization settings
   - Click "Visualize Image" to process and download
 
-- Batch Processing:
+- Batch Processing (for desktop version):
   - Select "Batch Processing" tab
-  - Drag and drop image files
-  - Drag and drop label files
+  - Drag and drop/upload image files & drag and drop/upload label files
+  - OR you can drag and drop/upload zip file containing all the necessary image files and their corresponding YOLO label '.txt' files like how the mobile/ios version can do
+  - Configure visualization settings
+  - Click "Visualize Batch" to process and download as ZIP
+ 
+- Batch Processing (for mobile/ios version):
+  - Select "Batch Processing" tab
+  - Drag and drop/upload zip file containing all the necessary image files and their corresponding YOLO label '.txt' files
   - Configure visualization settings
   - Click "Visualize Batch" to process and download as ZIP
 
 - Class Configuration:
   - Enter class names (one per line) in the text area OR upload a classes.txt file (could be named whatever you want) containing class names
+
+Note: `Due to iOS browser limitations—such as the inability to select multiple files from the file picker, restricted drag-and-drop support, and mandatory use of WebKit across all browsers—I decided to include support for uploading a single ZIP file containing all images and label files. This ensures smooth and consistent batch processing on both mobile (iOS) and desktop platforms.`
 
 ## Deployment
 The application is ready for deployment on platforms like Render or Heroku. The project includes:
